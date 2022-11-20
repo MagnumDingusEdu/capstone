@@ -11,6 +11,7 @@ class Scholarship(models.Model):
 
     name = models.CharField(max_length=200)
     scholarship_type = models.IntegerField(choices=ScholarshipType.choices)
+    # active = models.BooleanField(default=False)
 
     constraint_class12_percentage = models.FloatField(
         blank=True,
