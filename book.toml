@@ -1,0 +1,15 @@
+[book]
+authors = ["Scholarship Portal Team"]
+language = "en"
+multilingual = false
+src = "docs"
+title = "Scholarship Portal Docs"
+
+[build]
+build-dir = "docsgen"
+create-missing = false
+
+
+[output.html]
+no-section-label = true
+default-theme = "rust"
