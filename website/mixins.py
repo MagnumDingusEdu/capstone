@@ -13,7 +13,7 @@ class StudentRequired(LoginRequiredMixin, UserPassesTestMixin):
     def handle_no_permission(self):
         messages.error(self.request,
                        "This page can only be accessed by students. Please log in with your e-mail to continue")
-        return redirect("website:sign-in")
+        return redirect("sign-in")
 
 
 class StaffRequired(LoginRequiredMixin, UserPassesTestMixin):
@@ -24,4 +24,4 @@ class StaffRequired(LoginRequiredMixin, UserPassesTestMixin):
         messages.error(self.request,
                        "This page can only be accessed by staff members. Please log in with an appropriate account to "
                        "continue")
-        return redirect("website:sign-in")
+        return redirect("sign-in")
