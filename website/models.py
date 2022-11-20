@@ -11,25 +11,8 @@ class Scholarship(models.Model):
 
     name = models.CharField(max_length=200)
     scholarship_type = models.IntegerField(choices=ScholarshipType.choices)
-
-    constraint_class12_percentage = models.FloatField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-    )
-
-    constraint_class10_percentage = models.FloatField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-    )
-
-    constraint_cgpa = models.FloatField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
-    )
-
+    active = models.BooleanField(default=False)
+    
     notes = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
