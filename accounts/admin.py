@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import UserAccount
+from .models import UserAccount, Batch, Student
 
 admin.site.site_header = "Thapar Scholarship Portal"
 admin.site.site_title = "Thapar Scholarship Portal"
@@ -68,3 +68,16 @@ class UserAccountAdmin(UserAdmin):
     search_fields = ('email',)
 
     filter_horizontal = ()
+
+
+@admin.register(Batch)
+class BatchAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'roll_no', 'batch')
+    list_filter = ('batch',)
