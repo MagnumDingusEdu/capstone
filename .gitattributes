@@ -1,0 +1,2 @@
+website/static/dist/* linguist-vendored
+website/static/dist/**/* linguist-vendored

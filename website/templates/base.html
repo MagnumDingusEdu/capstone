@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Thapar Scholarship Portal</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="title" content="Thapar Scholarship Portal">
+    <meta name="description" content="One stop portal to view available scholarships etc.">
+
+
+    <!-- Favicon and app icons -->
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'dist/assets/img/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'dist/assets/img/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'dist/assets/img/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'dist/assets/img/favicon/site.webmanifest' %}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <link type="text/css" href="{% static 'dist/css/scholarship-portal.css' %}" rel="stylesheet">
+    {% block customStyles %}
+
+    {% endblock %}
+</head>
+
+<body>
+
+{% block sidebars %} {% endblock %}
+{% block content %}    {% endblock %}
+
+
+<!-- Core -->
+<script src="{% static 'dist/vendor/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+<script src="{% static 'dist/vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+<!-- Vendor JS -->
+<script src="{% static 'dist/vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+
+<!-- Slider -->
+<script src="{% static 'dist/vendor/nouislider/dist/nouislider.min.js' %}"></script>
+
+<!-- Smooth scroll -->
+<script src="{% static 'dist/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+
+<!-- Charts -->
+<script src="{% static 'dist/vendor/chartist/dist/chartist.min.js' %}"></script>
+<script src="{% static 'dist/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+
+<!-- Datepicker -->
+<script src="{% static 'dist/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+<!-- Moment JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+<!-- Vanilla JS Datepicker -->
+<script src="{% static 'dist/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+<!-- Sidebar -->
+<script src="{% static 'dist/vendor/simplebar/dist/simplebar.min.js' %}"></script>
+
+<!-- Core JS -->
+<script src="{% static 'dist/assets/js/scholarship-portal.js' %}"></script>
+
+{% block customScripts %}{% endblock %}
+</body>
+
+</html>

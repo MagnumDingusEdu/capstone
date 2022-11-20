@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block sidebars %}
+
+    {% include 'partials/mobile-navbar.html' %}
+    {% include 'partials/sidebar.html' with page="index" %}
+
+{% endblock %}
+{% block content %}
+
+    <main class="content">
+
+        {% include 'partials/navbar.html' %}
+
+        {#  Info Cards  #}
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 col-12">
+                <div class="card mb-2 mb-md-4">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-right">
+                                    <h3>{{ user.last_login }}</h3>
+                                    <span>Last Login</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-12">
+                <div class="card mb-2 mb-md-4">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-right">
+                                    <h3>23</h3>
+                                    <span>Sessions used</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-12">
+                <div class="card mb-2 mb-md-4">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+
+                                <div class="media-body text-right">
+                                    <h3>7</h3>
+                                    <span>Sessions remaining</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Gym Visit Summary Table and Your Passes #}
+        <div class="row">
+            <div class="col-12  mb-4">
+                <div class="card border-0 shadow">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h2 class="fs-5 fw-bold mb-0">Recent Gym Scans</h2>
+                            </div>
+                            <div class="col text-end">
+                                <a href="#" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th class="border-bottom" scope="col">User Name</th>
+                                <th class="border-bottom" scope="col">Sessions Used</th>
+                                <th class="border-bottom" scope="col">Date of Visit</th>
+                                <th class="border-bottom" scope="col">Time of Visit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th class="text-gray-900" scope="row">
+                                    Vividh Mariya
+                                </th>
+                                <td class="fw-bolder text-gray-500">
+                                    2.5
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    23rd Nov, 2022
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    4:23PM
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        {% include 'partials/footer.html' %}
+    </main>
+{% endblock %}
+

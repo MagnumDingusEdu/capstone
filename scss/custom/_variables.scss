@@ -1,0 +1,21 @@
+$primaryColor: #930002;
+$secondaryColor: #045b86;
+$tertiaryColor: #f98012;
+
+
+.simplebar-mask {
+  background: white;
+}
+
+.nav-item.active span {
+  color: white !important;;
+}
+
+.nav-item span {
+  color: $secondaryColor;
+}
+
+.nav-item:hover span {
+  color: white !important;
+}
+
