@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from accounts.models import UserAccount
 from website.mixins import StudentRequired, StaffRequired
+from website.models import Scholarship
 
 
 @login_required
@@ -20,7 +21,17 @@ def dashboard_redirector_view(request):
 class StudentDashboardView(StudentRequired, TemplateView):
     template_name = "pages/student-dashboard.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['scholarships'] = Scholarship.objects.all()
+        return context
+
 
 class StaffDashboardView(StaffRequired, TemplateView):
     template_name = "pages/staff-dashboard.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['user_count'] = UserAccount.objects.filter(role=UserAccount.STUDENT).count()
+        context['scholarships'] = Scholarship.objects.all()
+        return context

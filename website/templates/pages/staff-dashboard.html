@@ -13,7 +13,7 @@
         {% include 'partials/navbar.html' %}
 
         {#  Info Cards  #}
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-lg-4 col-sm-6 col-12">
                 <div class="card mb-2 mb-md-4">
                     <div class="card-content">
@@ -34,8 +34,8 @@
                         <div class="card-body">
                             <div class="media d-flex">
                                 <div class="media-body text-right">
-                                    <h3>23</h3>
-                                    <span>Sessions used</span>
+                                    <h3>{{ user_count }}</h3>
+                                    <span>Registered user(s)</span>
                                 </div>
                             </div>
                         </div>
@@ -49,8 +49,8 @@
                             <div class="media d-flex">
 
                                 <div class="media-body text-right">
-                                    <h3>7</h3>
-                                    <span>Sessions remaining</span>
+                                    <h3>{{ scholarships | length }}</h3>
+                                    <span>Active Scholarship(s)</span>
                                 </div>
                             </div>
                         </div>

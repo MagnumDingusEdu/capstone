@@ -99,50 +99,25 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th class="text-gray-900" scope="row">
-                                    MERIT SCHOLARSHIP - 1
-                                </th>
-                                <td class="fw-bolder text-gray-500">
-                                    Merit
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    TF + DF
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    <button class="btn btn-sm btn-outline-tertiary">View Details</button>
-                                </td>
-                            </tr>
+                            {% for scholarship in scholarships %}
 
-                            <tr>
-                                <th class="text-gray-900" scope="row">
-                                    MERIT SCHOLARSHIPS-II
-                                </th>
-                                <td class="fw-bolder text-gray-500">
-                                    Merit
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    TF Only
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    <button class="btn btn-sm btn-outline-tertiary">View Details</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="text-gray-900" scope="row">
-                                    MERIT-CUM-MEANS
-                                    SCHOLARSHIPS_NORMAL
-                                </th>
-                                <td class="fw-bolder text-gray-500">
-                                    Merit-cum-means
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    TF + DF
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    <button class="btn btn-sm btn-outline-tertiary">View Details</button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th class="text-gray-900" scope="row">
+                                       {{ scholarship.name }}
+                                    </th>
+                                    <td class="fw-bolder text-gray-500">
+                                      {{ scholarship.scholarship_type }}
+                                    </td>
+                                    <td class="fw-bolder text-gray-500">
+                                        TF + DF
+                                    </td>
+                                    <td class="fw-bolder text-gray-500">
+                                        <a href="#" class="btn btn-sm btn-outline-tertiary">View Details</a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
 
                             </tbody>
                         </table>
