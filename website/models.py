@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -96,7 +98,7 @@ class MCMApp(models.Model):
                                             help_text="Current CGPA or Rank or Diploma %")
 
     family_income_per_mcm_application = models.CharField(max_length=255,
-                                                          help_text="FAMILY INCOME AS MENTIONED IN MCM APPLICATION FORM")
+                                                         help_text="FAMILY INCOME AS MENTIONED IN MCM APPLICATION FORM")
     family_income_per_affidavit = models.CharField(max_length=255,
                                                    help_text="FAMILY INCOME AS PER AFFIDAVIT ATTACHED")
     family_income_per_certificate = models.CharField(max_length=255,
@@ -125,6 +127,30 @@ class MCMApp(models.Model):
     # TODO: upload documents
 
     declaration = models.BooleanField(
-        help_text="I ACKNOWLEDGE THAT I HAVE READ ALL THE ELIGIBILITY CRITERIA OF SCHOLARSHIP AND I AM ELIGIBLE FOR APPLYING TIET MERIT CUM MEANS SCHOLARSHIP.")
+        help_text="I ACKNOWLEDGE THAT I HAVE READ ALL THE ELIGIBILITY CRITERIA OF SCHOLARSHIP AND I AM ELIGIBLE FOR "
+                  "APPLYING TIET MERIT CUM MEANS SCHOLARSHIP.")
 
     # TODO: fill more fields, https://docs.google.com/forms/d/e/1FAIpQLScSaU3NGIu13V4j9fEi5B1Djl503c72o9sZ-9YsVY1_hsM4aA/viewform
+
+
+class NoticeCategory(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True, unique=True, editable=False)
+    title = models.TextField()
+    collapsed = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = "Notice Categories"
+
+
+class Notice(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True, unique=True, editable=False)
+    category = models.ForeignKey(NoticeCategory, on_delete=models.CASCADE, blank=True, null=True)
+    title = models.TextField()
+    attachment = models.FileField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return self.title

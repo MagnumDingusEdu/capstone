@@ -45,3 +45,23 @@ class Student(models.Model):
 
     def __str__(self):
         return f"Student | {self.user}"
+
+    roll_no = models.PositiveIntegerField(blank=True, null=True)
+    student_name = models.CharField(max_length=1024, blank=True, null=True)
+    jee_rank = models.FloatField(blank=True, null=True)
+    pcme_percentage = models.FloatField(blank=True, null=True)
+    programme = models.CharField(max_length=1024, blank=True, null=True)
+    branch_code = models.CharField(max_length=1024, blank=True, null=True)
+    app_no = models.PositiveIntegerField(blank=True, null=True)
+    pcm = models.FloatField(blank=True, null=True)
+    eng = models.FloatField(blank=True, null=True)
+    pcme = models.FloatField(blank=True, null=True)
+    pcm_total = models.FloatField(blank=True, null=True)
+    program_name = models.CharField(max_length=1024, blank=True, null=True)
+    branch_desc = models.CharField(max_length=1024, blank=True, null=True)
+    father_name = models.CharField(max_length=1024, blank=True, null=True)
+    mother_name = models.CharField(max_length=1024, blank=True, null=True)
+    dob = models.DateTimeField(blank=True, null=True)
+    sex = models.CharField(max_length=1024, blank=True, null=True)
+    adm_mode = models.CharField(max_length=1024, blank=True, null=True)
+    cat_type = models.CharField(max_length=1024, blank=True, null=True)

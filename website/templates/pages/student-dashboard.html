@@ -1,8 +1,11 @@
 {% extends 'student-dashboard-base.html' %}
 
+{% block sidebars %}
+    {{ block.super }}
+    {% include 'partials/sidebar.html' with page="index" %}
+{% endblock %}
 {% block mainSection %}
 
-    {# Purchase Gym Pass Button #}
     <div class="py-4 d-flex justify-content-start">
         <div class="dropdown">
             <a href="#" class="btn btn-primary text-white d-inline-flex align-items-center me-2 dropdown-toggle"
@@ -64,7 +67,6 @@
         </div>
     </div>
 
-    {# Gym Visit Summary Table and Your Passes #}
     <div class="row">
         <div class="col-12 mb-4">
             <div class="card border-0 shadow">

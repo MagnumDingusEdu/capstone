@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Scholarship, ScholarshipConstraint, Constraint
+from .models import Scholarship, ScholarshipConstraint, Constraint, Notice, NoticeCategory
 
 
 class ScholarshipConstraintInlineAdmin(admin.StackedInline):
@@ -29,14 +29,27 @@ class ConstraintAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
 
 
-# @admin.register(ScholarshipConstraint)
-# class ScholarshipConstraintAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'scholarship',
-#         'constraint',
-#         'min_value',
-#         'max_value',
-#     )
-#     list_filter = (
-#         'scholarship',
-#         'constraint')
+@admin.register(Notice)
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'category',
+        'attachment',
+        'date',
+    )
+    list_filter = ('date', 'category')
+
+
+class NoticeInline(admin.StackedInline):
+    model = Notice
+    extra = 0
+
+
+@admin.register(NoticeCategory)
+class NoticeCategoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'collapsed'
+    )
+    list_filter = ('collapsed',)
+    inlines = [NoticeInline]

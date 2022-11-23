@@ -72,4 +72,5 @@ class UserAccountAdmin(UserAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user',)
+    list_display = ('user', 'student_name', 'programme', 'branch_code', 'sex', 'adm_mode', 'cat_type')
+    list_filter = ('sex', 'programme', 'adm_mode', 'cat_type')
