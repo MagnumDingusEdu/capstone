@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.db import transaction
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from .models import UserAccount, Batch, Student
+from .models import UserAccount, Student
 
 
 class SignInView(TemplateView):
@@ -40,18 +40,11 @@ class SignInView(TemplateView):
 class SignUpView(TemplateView):
     template_name = "pages/sign-up.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['batches'] = Batch.objects.all()
-        return context
-
     @transaction.atomic
     def post(self, request, **kwargs):
         first_name = request.POST.get("first_name", "")
         last_name = request.POST.get("last_name", "")
-        roll_no = request.POST.get("roll_no", "")
         email = request.POST.get("email", "")
-        batch_id = request.POST.get("batch", "")
         password1 = request.POST.get("password1", "")
         password2 = request.POST.get("password2", "")
 
@@ -69,8 +62,6 @@ class SignUpView(TemplateView):
         if not password1 or not password2:
             messages.error(request, "Both passwords are required")
             error = True
-        if not roll_no:
-            messages.error(request, "Roll Number is required")
         if password1 != password2:
             messages.error(request, "Passwords do not match")
             error = True
@@ -93,7 +84,7 @@ class SignUpView(TemplateView):
                 user.first_name = first_name
                 user.last_name = last_name
                 user.save()
-                Student.objects.create(user=user, batch_id=batch_id, roll_no=roll_no)
+                Student.objects.create(user=user)
                 messages.success(request, "Registered successfully! Please log in now")
                 return redirect("sign-in")
             except Exception as e:

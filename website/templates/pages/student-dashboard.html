@@ -1,134 +1,121 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block sidebars %}
+{% extends 'student-dashboard-base.html' %}
 
-    {% include 'partials/mobile-navbar.html' %}
-    {% include 'partials/sidebar.html' with page="index" %}
+{% block mainSection %}
 
-{% endblock %}
-{% block content %}
+    {# Purchase Gym Pass Button #}
+    <div class="py-4 d-flex justify-content-start">
+        <div class="dropdown">
+            <a href="#" class="btn btn-primary text-white d-inline-flex align-items-center me-2 dropdown-toggle"
+               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                     class="bi bi-credit-card-2-back-fill icon icon-xs me-2" viewBox="0 0 16 16">
+                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2zM0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z"></path>
+                </svg>
+                Scholarship Eligibility Calculator
+            </a>
 
-    <main class="content">
-
-        {% include 'partials/navbar.html' %}
-
-        {# Purchase Gym Pass Button #}
-        <div class="py-4 d-flex justify-content-start">
-            <div class="dropdown">
-                <a href="#" class="btn btn-primary text-white d-inline-flex align-items-center me-2 dropdown-toggle"
-                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                         class="bi bi-credit-card-2-back-fill icon icon-xs me-2" viewBox="0 0 16 16">
-                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2zM0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z"></path>
-                    </svg>
-                    Scholarship Eligibility Calculator
-                </a>
-
-            </div>
         </div>
+    </div>
 
-        {#  Info Cards  #}
-        <div class="row">
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="card mb-2 mb-md-4">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="media d-flex">
-                                <div class="media-body text-right">
-                                    <h3>{{ user.last_login.date }}</h3>
-                                    <span>Last Login</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="card mb-2 mb-md-4">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="media d-flex">
-                                <div class="media-body text-right">
-                                    <h3>{{ user.student.roll_no }}</h3>
-                                    <span>Roll Number</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6 col-12">
-                <div class="card mb-2 mb-md-4">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="media d-flex">
-
-                                <div class="media-body text-right">
-                                    <h3>{{ user.student.batch }}</h3>
-                                    <span>Batch</span>
-                                </div>
+    {#  Info Cards  #}
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-12">
+            <div class="card mb-2 mb-md-4">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-right">
+                                <h3>{{ user.last_login.date }}</h3>
+                                <span>Last Login</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        {# Gym Visit Summary Table and Your Passes #}
-        <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card border-0 shadow">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h2 class="fs-5 fw-bold mb-0">Available Scholarships</h2>
-                            </div>
-                            <div class="col text-end">
-                                <a href="#" class="btn btn-sm btn-primary">See all</a>
+        <div class="col-lg-4 col-sm-6 col-12">
+            <div class="card mb-2 mb-md-4">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-right">
+                                <h3>{{ user.student.roll_no }}</h3>
+                                <span>Roll Number</span>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-12">
+            <div class="card mb-2 mb-md-4">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+
+                            <div class="media-body text-right">
+                                <h3>{{ user.student.batch }}</h3>
+                                <span>Batch</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Gym Visit Summary Table and Your Passes #}
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card border-0 shadow">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2 class="fs-5 fw-bold mb-0">Available Scholarships</h2>
+                        </div>
+                        <div class="col text-end">
+                            <a href="#" class="btn btn-sm btn-primary">See all</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                        <tr>
+                            <th class="border-bottom" scope="col">Name</th>
+                            <th class="border-bottom" scope="col">Type</th>
+                            <th class="border-bottom" scope="col">Amount</th>
+                            <th class="border-bottom" scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for scholarship in scholarships %}
+
                             <tr>
-                                <th class="border-bottom" scope="col">Name</th>
-                                <th class="border-bottom" scope="col">Type</th>
-                                <th class="border-bottom" scope="col">Amount</th>
-                                <th class="border-bottom" scope="col">Actions</th>
+                                <th class="text-gray-900" scope="row">
+                                    {{ scholarship.name }}
+                                </th>
+                                <td class="fw-bolder text-gray-500">
+                                    {{ scholarship.scholarship_type }}
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    TF + DF
+                                </td>
+                                <td class="fw-bolder text-gray-500">
+                                    <a href="#" class="btn btn-sm btn-outline-tertiary">View Details</a>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {% for scholarship in scholarships %}
 
-                                <tr>
-                                    <th class="text-gray-900" scope="row">
-                                       {{ scholarship.name }}
-                                    </th>
-                                    <td class="fw-bolder text-gray-500">
-                                      {{ scholarship.scholarship_type }}
-                                    </td>
-                                    <td class="fw-bolder text-gray-500">
-                                        TF + DF
-                                    </td>
-                                    <td class="fw-bolder text-gray-500">
-                                        <a href="#" class="btn btn-sm btn-outline-tertiary">View Details</a>
-                                    </td>
-                                </tr>
-
-                            {% endfor %}
+                        {% endfor %}
 
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
 
+    </div>
 
-        {% include 'partials/footer.html' %}
-    </main>
+
 {% endblock %}
-

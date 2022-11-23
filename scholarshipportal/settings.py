@@ -29,7 +29,11 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "colorfield",
     "django_summernote",
-    "django_tables2"
+    "django_tables2",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +148,29 @@ MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.ERROR: 'danger'}
 
 SUMMERNOTE_THEME = 'bs5'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+SOCIALACCOUNT_ADAPTER = 'accounts.account_adapter.CustomSocialAccountAdapter'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_LOGIN_ON_GET = True

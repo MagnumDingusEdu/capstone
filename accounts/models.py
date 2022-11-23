@@ -39,35 +39,9 @@ class UserAccount(AbstractUser):
         return self.role == self.STAFF
 
 
-class Batch(models.Model):
-    id = models.UUIDField(default=uuid4, primary_key=True, unique=True, editable=False)
-    name = models.CharField(max_length=1024)
-
-    class Meta:
-        verbose_name_plural = 'Batches'
-
-    def __str__(self):
-        return self.name
-
-
-class Branch(models.Model):
-    id = models.UUIDField(default=uuid4, primary_key=True, unique=True, editable=False)
-    name = models.CharField(max_length=1024)
-
-    class Meta:
-        verbose_name_plural = 'Branches'
-
-    def __str__(self):
-        return self.name
-
-
 class Student(models.Model):
     id = models.UUIDField(unique=True, primary_key=True, default=uuid4, editable=False)
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
-    roll_no = models.PositiveIntegerField()
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Student | {self.user}"
-

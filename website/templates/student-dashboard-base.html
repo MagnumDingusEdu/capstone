@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block sidebars %}
+
+    {% include 'partials/mobile-navbar.html' %}
+    {% include 'partials/sidebar.html' with page="index" %}
+
+{% endblock %}
+{% block content %}
+
+    <main class="content">
+
+        {% include 'partials/navbar.html' %}
+        {% if messages %}
+            <div class="mt-4"> {% include 'partials/message-alerts.html' %}</div>
+        {% endif %}
+        {% block mainSection %}
+
+        {% endblock %}
+        {% include 'partials/footer.html' %}
+    </main>
+{% endblock %}
+
