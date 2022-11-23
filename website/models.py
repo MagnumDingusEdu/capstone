@@ -83,12 +83,48 @@ class ScholarshipConstraint(models.Model):
         return f"{self.constraint.name} constraint on [{self.scholarship.name}]"
 
 
-class McmApplication(models.Model):
+class MCMApp(models.Model):
+    # TODO: add verbose_name
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     contact_number = models.PositiveIntegerField()
     alternate_contact_number = models.PositiveIntegerField()
     state_of_residence = models.CharField(choices=STATE_CHOICES, max_length=255)
-    twelfth_marks = models.CharField(max_length=255)
-    current_cgpa_or_rank = models.CharField(max_length=255)
-    family_income = models.CharField(max_length=255)
+
+    class_12_marks = models.CharField(max_length=255)  # % or CGPA
+    current_cgpa_or_rank = models.CharField(max_length=255,
+                                            help_text="Current CGPA or Rank or Diploma %")
+
+    family_income_per_mcm_application = models.CharField(max_length=255,
+                                                          help_text="FAMILY INCOME AS MENTIONED IN MCM APPLICATION FORM")
+    family_income_per_affidavit = models.CharField(max_length=255,
+                                                   help_text="FAMILY INCOME AS PER AFFIDAVIT ATTACHED")
+    family_income_per_certificate = models.CharField(max_length=255,
+                                                     help_text="FAMILY INCOME AS PER CERTIFICATE OF TEHSILDAR")
+    bank_balance = models.IntegerField()
+    fdr_balance = models.CharField(max_length=255, help_text="")
+
+    itr_annual_year_current = models.IntegerField(help_text="ITR for this annual year")
+    itr_annual_year_last = models.IntegerField(help_text="ITR for previous annual year")
+    itr_annual_year_last_last = models.IntegerField(help_text="ITR for last to last annual year")
+
+    immovable_property = models.BooleanField(help_text="IMMOVABLE PROPERTY AS PER AFFIDAVIT")
+    single_girl_child = models.BooleanField(help_text="Are you a Single Girl Child?")
+
+    applied_for_mcp_special = models.BooleanField(help_text="APPLIED FOR MCM SPECIAL?")
+    mcp_special_reason = models.TextField(help_text="SPECIFIC REASON FOR APPLYING MCM SPECIAL?")
+
+    applied_for_other_scholarship = models.BooleanField(help_text="HAVE YOU APPLIED FOR ANY OTHER SCHOLARSHIP?")
+    other_scholarship_details = models.TextField(help_text="DETAILS OF OTHER SCHOLARSHIP APPLIED")
+
+    previous_year_scholarship = models.BooleanField(
+        help_text="HAVE YOU RECEIVED ANY SCHOLARSHIP IN THE PREVIOUS YEAR?")
+    previous_year_scholarship_details = models.TextField(help_text="DETAILS OF PREVIOUS SCHOLARSHIP RECEIVED")
+    previous_year_scholarship_amount = models.IntegerField(help_text="AMOUNT OF THE PREVIOUS SCHOLARSHIP")
+
+    # TODO: upload documents
+
+    declaration = models.BooleanField(
+        help_text="I ACKNOWLEDGE THAT I HAVE READ ALL THE ELIGIBILITY CRITERIA OF SCHOLARSHIP AND I AM ELIGIBLE FOR APPLYING TIET MERIT CUM MEANS SCHOLARSHIP.")
+
     # TODO: fill more fields, https://docs.google.com/forms/d/e/1FAIpQLScSaU3NGIu13V4j9fEi5B1Djl503c72o9sZ-9YsVY1_hsM4aA/viewform
