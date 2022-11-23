@@ -76,8 +76,7 @@ class BatchAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'roll_no', 'batch')
-    list_filter = ('batch',)
+    list_display = ('user', 'roll_no', 'batch')
+    list_filter = (('batch__name'),)

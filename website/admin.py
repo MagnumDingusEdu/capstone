@@ -1,15 +1,42 @@
 from django.contrib import admin
-from .models import Scholarship
+from .models import Scholarship, ScholarshipConstraint, Constraint
+
+
+class ScholarshipConstraintInlineAdmin(admin.StackedInline):
+    model = ScholarshipConstraint
+    extra = 1
 
 
 @admin.register(Scholarship)
 class ScholarshipAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    list_display = [
-        "name",
-        # "active",
-        "scholarship_type",
-    ]
+    inlines = [ScholarshipConstraintInlineAdmin]
+    list_display = (
+        'name',
+        'scholarship_type',
+        'enabled',
+        'amount',
+        'notes'
+    )
+    list_filter = ('enabled', 'created_at', 'updated_at', 'scholarship_type')
+    raw_id_fields = ('constraints',)
+    search_fields = ('name', 'notes')
+    date_hierarchy = 'created_at'
 
-    readonly_fields = ("created_at", "updated_at")
 
+@admin.register(Constraint)
+class ConstraintAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
+
+
+# @admin.register(ScholarshipConstraint)
+# class ScholarshipConstraintAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'scholarship',
+#         'constraint',
+#         'min_value',
+#         'max_value',
+#     )
+#     list_filter = (
+#         'scholarship',
+#         'constraint')
