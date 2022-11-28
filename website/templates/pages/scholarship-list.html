@@ -1,0 +1,143 @@
+{% extends 'student-dashboard-base.html' %}
+
+{% block sidebars %}
+    {{ block.super }}
+    {% include 'partials/sidebar.html' with page="scholarships" %}
+{% endblock %}
+
+{% block customStyles %}
+    <style>
+        .accordion-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            color: #374151;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0);
+            border: 0;
+            border-radius: 0;
+            overflow-anchor: none;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-radius 0.15s ease
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .accordion-button {
+                transition: none
+            }
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: #4B5563;
+            background-color: #F2F4F6;
+            box-shadow: inset 0 -.0625rem 0 #E5E7EB
+        }
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234B5563'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            transform: rotate(180deg)
+        }
+
+        .accordion-button::after {
+            flex-shrink: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-left: auto;
+            content: "";
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23374151'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-size: 1.25rem;
+            transition: transform 0.2s ease-in-out
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .accordion-button::after {
+                transition: none
+            }
+        }
+
+        .accordion-button:hover {
+            z-index: 2
+        }
+
+        .accordion-button:focus {
+            z-index: 3;
+            border-color: #4d6689;
+            outline: 0;
+            box-shadow: 0 0 0 .18rem rgba(31, 41, 55, 0.25)
+        }
+
+        .list-group-item {
+            border-bottom: 0.05rem solid lightgray !important;
+        }
+    </style>
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">Available scholarships</h2>
+            <p class="mb-0">SCHOLARSHIPS / TUITION FREESHIPS FOR THE CURRENT SESSION </p>
+        </div>
+
+    </div>
+    <div class="d-block mb-4">
+        <div class="accordion" id="accordionExample">
+            {% for category in object_list %}
+                <div class="accordion-item {% if forloop.counter == 1 %}active{% endif %}">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse_{{ category.id }}" aria-expanded="true"
+                                aria-controls="collapse_{{ category.id }}">
+                            {{ category.name }}
+                        </button>
+                    </h2>
+                    <div id="collapse_{{ category.id }}" class="accordion-collapse collapse show"
+                         aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% for scholarship in category.scholarship_set.all %}
+                                <div class="card mb-3">
+                                    <div class="card-header bg-secondary text-white px-3 pt-3 pb-1">
+                                        <h5>{{ scholarship.name }}</h5>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <b>Total Number of
+                                                scholarships:</b> {{ scholarship.number_of_scholarships }}</li>
+                                        <li class="list-group-item"><b>Value of
+                                            scholarship:</b> {{ scholarship.value_of_scholarship }}</li>
+                                        <li class="list-group-item"><b>How to apply: </b>
+                                            {% if scholarship.scholarship_type == 1 %}Allotted automatically. No need to
+                                                apply
+                                            {% else %}
+                                                <a href="{% url 'website:mcm-scholarship-apply' scholarship.id %}"
+                                                   class="btn ms-1 btn-sm btn-primary">Apply here</a>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+
+
+                                    <div class="card-text p-4">
+                                        <p><b>Eligibility Criteria:</b></p>
+                                        {{ scholarship.eligibility_criteria | safe }}
+                                    </div>
+
+                                </div>
+                                <hr>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+    </div>
+
+{% endblock %}

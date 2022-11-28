@@ -147,7 +147,7 @@ MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.WARNING: 'warning',
                 message_constants.ERROR: 'danger'}
 
-SUMMERNOTE_THEME = 'bs5'
+SUMMERNOTE_THEME = 'bs4'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

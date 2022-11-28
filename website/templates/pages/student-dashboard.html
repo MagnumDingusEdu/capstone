@@ -42,29 +42,15 @@
                     <div class="card-body">
                         <div class="media d-flex">
                             <div class="media-body text-right">
-                                <h3>{{ user.student.roll_no }}</h3>
-                                <span>Roll Number</span>
+                                <h3>{{ user.email }}</h3>
+                                <span>E-mail</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-12">
-            <div class="card mb-2 mb-md-4">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="media d-flex">
 
-                            <div class="media-body text-right">
-                                <h3>{{ user.student.batch }}</h3>
-                                <span>Batch</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="row">
@@ -73,10 +59,10 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h2 class="fs-5 fw-bold mb-0">Available Scholarships</h2>
+                            <h2 class="fs-5 fw-bold mb-0">Notice Board</h2>
                         </div>
                         <div class="col text-end">
-                            <a href="#" class="btn btn-sm btn-primary">See all</a>
+                            <a href="{% url 'website:notice-board' %}" class="btn btn-sm btn-primary">See all</a>
                         </div>
                     </div>
                 </div>
@@ -84,28 +70,31 @@
                     <table class="table align-items-center table-flush">
                         <thead class="thead-light">
                         <tr>
-                            <th class="border-bottom" scope="col">Name</th>
-                            <th class="border-bottom" scope="col">Type</th>
-                            <th class="border-bottom" scope="col">Amount</th>
-                            <th class="border-bottom" scope="col">Actions</th>
+                            <th class="border-bottom" scope="col">S.No.</th>
+                            <th class="border-bottom" scope="col" style="width: 60%">Name</th>
+                            <th class="border-bottom" scope="col">Category</th>
+                            <th class="border-bottom" scope="col">Date</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for scholarship in scholarships %}
+                        {% for notice in notices %}
 
                             <tr>
-                                <th class="text-gray-900" scope="row">
-                                    {{ scholarship.name }}
+                                <td>{{ forloop.counter }}</td>
+                                <td scope="row">
+                                    <a
+                                            {% if notice.attachment %}href="{{ notice.attachment.url }}"
+                                            target="_blank"{% endif %}
+
+                                            class="fw-bolder ">{{ notice.title }}</a>
                                 </th>
                                 <td class="fw-bolder text-gray-500">
-                                    {{ scholarship.scholarship_type }}
+                                    {{ notice.category.title }}
                                 </td>
                                 <td class="fw-bolder text-gray-500">
-                                    TF + DF
+                                    {{ notice.date.date }}
                                 </td>
-                                <td class="fw-bolder text-gray-500">
-                                    <a href="#" class="btn btn-sm btn-outline-tertiary">View Details</a>
-                                </td>
+
                             </tr>
 
                         {% endfor %}
