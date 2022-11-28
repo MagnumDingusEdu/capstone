@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.forms import ModelForm
 
-from website.models import MCMApplication
+from website.models import MCMApplication, Grievance
 
 
 class UserPasswordChangeForm(AdminPasswordChangeForm):
@@ -18,9 +18,10 @@ class MCMApplicationForm(ModelForm):
         model = MCMApplication
         fields = '__all__'
 
+        exclude = ('remarks', 'status')
+
     def __init__(self, student_id, scholarship_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(self.fields)
         self.fields['student'].value = student_id
         self.fields['student'].initial = student_id
         self.fields['student'].disabled = True
@@ -28,3 +29,16 @@ class MCMApplicationForm(ModelForm):
         self.fields['scholarship'].value = scholarship_id
         self.fields['scholarship'].initial = scholarship_id
         self.fields['scholarship'].disabled = True
+
+
+class GrievanceForm(ModelForm):
+    class Meta:
+        model = Grievance
+        fields = '__all__'
+        exclude = ('date_opened', 'resolved', 'remarks')
+
+    def __init__(self, student_id, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['student'].value = student_id
+        self.fields['student'].initial = student_id
+        self.fields['student'].disabled = True

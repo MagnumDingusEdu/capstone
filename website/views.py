@@ -8,9 +8,9 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView
 from accounts.models import UserAccount
-from website.forms import UserPasswordChangeForm, MCMApplicationForm
+from website.forms import UserPasswordChangeForm, MCMApplicationForm, GrievanceForm
 from website.mixins import StudentRequired, StaffRequired
-from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMApplication
+from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMApplication, Grievance
 
 
 @login_required
@@ -18,7 +18,7 @@ def dashboard_redirector_view(request):
     if request.user.is_student():
         return redirect("website:student-dashboard")
     elif request.user.is_staff_member:
-        return redirect("website:staff-dashboard")
+        return redirect("/admin")
     else:
         return HttpResponse("You do not have permission to access this page.")
 
@@ -91,3 +91,37 @@ class MCMScholarshipApplyView(SuccessMessageMixin, StudentRequired, CreateView):
         return context
 
     template_name = "pages/mcm-application-form.html"
+
+
+class MCMApplicationListView(StudentRequired, ListView):
+    template_name = "pages/mcm-applications.html"
+    model = MCMApplication
+
+    def post(self, request):
+        try:
+            application = get_object_or_404(MCMApplication, pk=self.request.POST.get("application_id"))
+            application.delete()
+        except Exception as e:
+            messages.error(request, "Failed to withdraw application. Error : " + str(e))
+        messages.success(request, "The specified application was successfully withdrawn")
+        return redirect(reverse_lazy("website:mcm-application-list"))
+
+
+class GrievanceSubmitView(StudentRequired, SuccessMessageMixin, CreateView):
+    model = Grievance
+    success_message = 'Your grievance was submitted successfully'
+    template_name = 'pages/submit-grievance.html'
+    form_class = GrievanceForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['student_id'] = self.request.user.student.id
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('website:grievance-list-view')
+
+
+class GrievanceListView(StudentRequired, ListView):
+    template_name = "pages/grievance-list.html"
+    model = Grievance

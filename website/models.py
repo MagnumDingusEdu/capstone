@@ -154,6 +154,10 @@ class MCMApplication(models.Model):
         help_text="I acknowledge that i have read all the eligibility criteria of scholarship and i am eligible for "
                   "applying to TIET Merit-cum-means scholarship.")
 
+    status = models.CharField(max_length=1024, default='PENDING',
+                              choices=(('PENDING', 'PENDING'), ('APPROVED', 'APPROVED'), ('REJECTED', 'REJECTED')))
+    remarks = models.TextField(blank=True, null=True)
+
     # TODO: fill more fields, https://docs.google.com/forms/d/e/1FAIpQLScSaU3NGIu13V4j9fEi5B1Djl503c72o9sZ-9YsVY1_hsM4aA/viewform
 
     def __str__(self):
@@ -185,3 +189,16 @@ class Notice(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Grievance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.TextField()
+    issue_details = models.TextField()
+    date_opened = models.DateTimeField(auto_now_add=True)
+
+    resolved = models.BooleanField(default=False)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.subject

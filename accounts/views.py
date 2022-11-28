@@ -91,3 +91,5 @@ class SignUpView(TemplateView):
                 messages.error(request, "An error occurred while signing up : " + str(e))
 
         return super().render_to_response(self.get_context_data())
+
+

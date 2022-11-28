@@ -2,7 +2,7 @@ from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
 from .models import Scholarship, ScholarshipConstraint, Constraint, Notice, NoticeCategory, ScholarshipCategory, \
-    MCMApplication
+    MCMApplication, Grievance
 
 
 class ScholarshipConstraintInlineAdmin(admin.StackedInline):
@@ -66,10 +66,12 @@ class ScholarshipCategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(MCMApplication)
-class MCMApplicationAdmin(admin.ModelAdmin):
+class MCMApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+    summernote_fields = ('remarks',)
     list_display = (
         'student',
         'scholarship',
+        'status',
         'contact_number',
         'alternate_contact_number',
         'state_of_residence',
@@ -96,6 +98,7 @@ class MCMApplicationAdmin(admin.ModelAdmin):
         'supporting_documents',
     )
     list_filter = (
+        'status',
         'student',
         'scholarship',
         'immovable_property',
@@ -107,3 +110,16 @@ class MCMApplicationAdmin(admin.ModelAdmin):
 
     readonly_fields = ('student', 'scholarship', 'id')
     search_fields = ('student__user__first_name', 'student__user__last_name', 'scholarship__name')
+
+
+@admin.register(Grievance)
+class GrievanceAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+    summernote_fields = ('remarks',)
+    list_display = (
+        'subject',
+        'date_opened',
+        'resolved',
+    )
+    list_filter = ('date_opened', 'resolved')
+
+    readonly_fields = ('id',)

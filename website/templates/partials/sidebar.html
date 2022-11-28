@@ -59,12 +59,25 @@
                   <span>
                     <span class="sidebar-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                           class="bi bi-bookmark-plus-fill mx-1" viewBox="0 0 20 20">
+                           class="bi bi-bookmark-plus-fill me-2" viewBox="0 0 20 20">
                               <path fill-rule="evenodd"
                                     d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5V4.5z"></path>
                             </svg>
                     </span>
                     <span class="sidebar-text">Scholarships</span>
+                  </span>
+                </a>
+            </li>
+            <li class="nav-item {% if page == 'mcm_applications' %}active{% endif %}">
+                <a href="{% url 'website:mcm-application-list' %}" class="nav-link d-flex justify-content-between">
+                  <span>
+                    <span class="sidebar-icon">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                          class="bi bi-file-text-fill me-2" viewBox="0 0 20 20">
+  <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z"/>
+</svg>
+                    </span>
+                    <span class="sidebar-text">My Applications</span>
                   </span>
                 </a>
             </li>
@@ -80,6 +93,30 @@
                   </span>
                 </a>
             </li>
+            <hr>
+            <li class="nav-item {% if page == 'grievance_submit' %}active{% endif %}">
+                <a href="{% url 'website:grievance-submit-view' %}" class="nav-link">
+                      <span class="sidebar-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                           class="bi bi-emoji-frown-fill me-2" viewBox="0 0 20 20">
+  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm-2.715 5.933a.5.5 0 0 1-.183-.683A4.498 4.498 0 0 1 8 9.5a4.5 4.5 0 0 1 3.898 2.25.5.5 0 0 1-.866.5A3.498 3.498 0 0 0 8 10.5a3.498 3.498 0 0 0-3.032 1.75.5.5 0 0 1-.683.183zM10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8z"></path>
+</svg>
+                      </span>
+                    <span class="sidebar-text">Submit Grievance</span>
+                </a>
+            </li>
+            <li class="nav-item {% if page == 'grievance_list' %}active{% endif %}">
+                <a href="{% url 'website:grievance-list-view' %}" class="nav-link">
+                      <span class="sidebar-icon">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                          class="bi bi-person-lines-fill me-2" viewBox="0 0 20 20">
+  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+</svg>
+                      </span>
+                    <span class="sidebar-text">My Grievances</span>
+                </a>
+            </li>
+            <hr>
             <li class="nav-item {% if page == 'change_password' %}active{% endif %}">
                 <a href="{% url 'website:change-password' %}" class="nav-link">
                       <span class="sidebar-icon">

@@ -1,0 +1,189 @@
+{% extends 'student-dashboard-base.html' %}
+{% load tags %}
+
+{% block sidebars %}
+    {{ block.super }}
+    {% include 'partials/sidebar.html' with page="mcm_applications" %}
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">My submitted applications</h2>
+            <p class="mb-0">Here are the applications you've submitted for Thapar Merit-cum-means scholarships</p>
+        </div>
+
+    </div>
+
+    <div class="accordion" id="accordionPricing">
+
+        <div class="card rounded bg-white pt-4">
+            <div class="d-flex justify-content-center row mx-md-3 mx-0">
+                <div class="col-12 p-0">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap rounded mb-0">
+                            <thead class="">
+                            <tr>
+                                <th style="width: 10%">Application ID</th>
+                                <th>Scholarship</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for application in object_list %}
+                                <tr>
+                                    <td><a href="#">#{{ application.id }}</a></td>
+                                    <td>{{ application.scholarship.name }}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-{% if application.status == 'PENDING' %}warning{% elif application.status == 'REJECTED' %}danger{% else %}success{% endif %}">
+                                            {{ application.status }}</button>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-outline-info me-2  mb-3"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-{{ application.id }}-details">View
+                                                    Details
+                                                </button>
+                                                <div class="modal fade" id="modal-{{ application.id }}-details"
+                                                     tabindex="-1"
+                                                     style="display: none;"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"><h2
+                                                                    class="h6 modal-title">Application Details</h2>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-wrap">
+                                                                <p><b>Scholarship
+                                                                    Name: </b> {{ application.scholarship.name }}</p>
+                                                                <p><b>Contact No: </b> {{ application.contact_number }}
+                                                                </p>
+                                                                <p><b>Alternate Contact
+                                                                    No: </b> {{ application.alternate_contact_number }}
+                                                                </p>
+                                                                <p><b>State: </b> {{ application.state_of_residence }}
+                                                                </p>
+                                                                <hr>
+                                                                <p><b>Class 12
+                                                                    Marks: </b>{{ application.class_12_marks }}</p>
+                                                                <p><b>Current CGPA or
+                                                                    Rank: </b> {{ application.current_cgpa_or_rank }}
+                                                                </p>
+                                                                <p><b>Family Income as per MCM
+                                                                    Application: </b> {{ application.family_income_per_mcm_application }}
+                                                                </p>
+                                                                <p><b>Family Income as per
+                                                                    Affidavit: </b> {{ application.family_income_per_affidavit }}
+                                                                </p>
+                                                                <p><b>Family Income as per Certificate of
+                                                                    Tehsildar: </b> {{ application.family_income_per_certificate }}
+                                                                </p>
+                                                                <hr>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-outline-secondary mb-3 me-2" type="button"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-{{ application.id }}-remarks">
+                                                    View Remarks
+                                                </button>
+                                                <div class="modal fade" id="modal-{{ application.id }}-remarks"
+                                                     tabindex="-1"
+                                                     style="display: none;"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"><h2
+                                                                    class="h6 modal-title">Remarks</h2>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-wrap">
+                                                                {% if application.remarks %}
+                                                                    {{ application.remarks | safe }} {% else %} There are no
+                                                                    remarks
+                                                                    yet.{% endif %}
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% if  application.status == 'PENDING' %}
+                                                    <button class="btn btn-danger mb-3" type="button"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal-{{ application.id }}-withdraw">
+                                                        Withdraw Application
+                                                    </button>{% endif %}
+                                                <div class="modal fade" id="modal-{{ application.id }}-withdraw"
+                                                     tabindex="-1"
+                                                     style="display: none;"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"><h2
+                                                                    class="h6 modal-title">Are you sure?</h2>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-wrap">
+                                                                This action cannot be undone. If you withdraw the
+                                                                application, you will need to resubmit a new
+                                                                application.
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                        data-bs-dismiss="modal">Cancel
+                                                                </button>
+                                                                <form action="" method="POST">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="application_id"
+                                                                           value="{{ application.id }}">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        Withdraw
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}

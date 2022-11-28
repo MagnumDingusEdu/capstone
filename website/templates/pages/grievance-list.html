@@ -1,0 +1,122 @@
+{% extends 'student-dashboard-base.html' %}
+{% load tags %}
+
+{% block sidebars %}
+    {{ block.super }}
+    {% include 'partials/sidebar.html' with page="grievance_list" %}
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">My submitted grievances</h2>
+            <p class="mb-0">Here is the list of all grievances you've submitted so far</p>
+        </div>
+
+    </div>
+
+    <div class="accordion" id="accordionPricing">
+
+        <div class="card rounded bg-white pt-2">
+            <div class="d-flex justify-content-center row mx-md-3 mx-0">
+                <div class="col-12 p-0">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap rounded mb-0">
+                            <thead class="">
+                            <tr>
+                                <th style="width: 10%">Grievance ID</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for grievance in object_list %}
+                                <tr>
+                                    <td><a href="#">#{{ grievance.id }}</a></td>
+                                    <td>{{ grievance.subject }}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-{% if grievance.resolved %}success{% else %}warning{% endif %}">
+                                            {% if not grievance.resolved %}PENDING{% else %}RESOLVED{% endif %}</button>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-outline-primary me-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-{{ grievance.id }}-details">View
+                                                    Issue
+                                                </button>
+                                                <div class="modal fade" id="modal-{{ grievance.id }}-details"
+                                                     tabindex="-1"
+                                                     style="display: none;"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"><h2
+                                                                    class="h6 modal-title">Grievance Issue Details</h2>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-wrap">
+                                                                {{ grievance.issue_details | safe }}
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-info me-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-{{ grievance.id }}-remarks">Remarks
+                                                </button>
+                                                <div class="modal fade" id="modal-{{ grievance.id }}-remarks"
+                                                     tabindex="-1"
+                                                     style="display: none;"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"><h2
+                                                                    class="h6 modal-title">Remarks</h2>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-wrap">
+                                                                {% if grievance.remarks %}
+                                                                    {{ grievance.remarks | safe }} {% else %} There are
+                                                                    no remarks yet. {% endif %}
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
