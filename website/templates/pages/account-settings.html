@@ -1,0 +1,41 @@
+{% extends 'student-dashboard-base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block sidebars %}{{ block.super }}
+
+    {% include 'partials/sidebar.html' with page='account_settings' %}
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">My Profile</h2>
+            <p class="mb-0">Here you can view your profile details that are saved in the database. </p>
+        </div>
+
+    </div>
+    <div class="d-block mb-4">
+        <div class="card p-4 rounded bg-white">
+            <p><b>Roll No: </b>{{ student.roll_no }}</p>
+            <p><b>Student Name: </b>{{ student.student_name }}</p>
+            <p><b>JEE Rank: </b>{{ student.jee_rank }}</p>
+            <p><b>PCME Percentage: </b>{{ student.pcme_percentage }}</p>
+            <p><b>Programme: </b>{{ student.programme }}</p>
+            <p><b>Branch code: </b>{{ student.branch_code }}</p>
+            <p><b>App No.: </b>{{ student.app_no }}</p>
+            <p><b>PCM: </b>{{ student.pcm }}</p>
+            <p><b>Eng: </b>{{ student.eng }}</p>
+            <p><b>PCME: </b>{{ student.pcme }}</p>
+            <p><b>PCM Total: </b>{{ student.pcm_total }}</p>
+            <p><b>Program Name: </b>{{ student.program_name }}</p>
+            <p><b>Branch Description: </b>{{ student.branch_desc }}</p>
+            <p><b>Father Name: </b>{{ student.father_name }}</p>
+            <p><b>Mother Name: </b>{{ student.mother_name }}</p>
+            <p><b>DOB: </b>{{ student.dob }}</p>
+            <p><b>Sex: </b>{{ student.sex }}</p>
+            <p><b>Admission Mode: </b>{{ student.adm_mode }}</p>
+            <p><b>CAT Type: </b>{{ student.cat_type }}</p>
+        </div>
+    </div>
+{% endblock %}

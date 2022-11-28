@@ -10,7 +10,8 @@ from django.views.generic import TemplateView, ListView, FormView, CreateView
 from accounts.models import UserAccount
 from website.forms import UserPasswordChangeForm, MCMApplicationForm, GrievanceForm
 from website.mixins import StudentRequired, StaffRequired
-from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMApplication, Grievance
+from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMApplication, Grievance, \
+    Constraint
 
 
 @login_required
@@ -125,3 +126,26 @@ class GrievanceSubmitView(StudentRequired, SuccessMessageMixin, CreateView):
 class GrievanceListView(StudentRequired, ListView):
     template_name = "pages/grievance-list.html"
     model = Grievance
+
+
+class AccountSettingsView(StudentRequired, TemplateView):
+    template_name = "pages/account-settings.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['student'] = self.request.user.student
+        return context
+
+
+class ScholarshipCalculatorView(StudentRequired, TemplateView):
+    template_name = "pages/scholarship-calculator.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['constraints'] = Constraint.objects.all()
+        return context
+
+    def post(self, request):
+        keys = list(self.request.POST.dict().keys())
+        relevant_constraints = Constraint.objects.filter(pk__in=keys)
+        return super().render_to_response(self.get_context_data())

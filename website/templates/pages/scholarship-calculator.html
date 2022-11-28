@@ -1,0 +1,36 @@
+{% extends 'student-dashboard-base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block sidebars %}{{ block.super }}
+
+    {% include 'partials/sidebar.html' with page='scholarship_calculator' %}
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">Scholarship Calculator</h2>
+            <p class="mb-0">Please enter your details here, to see which scholarships you're eligible for </p>
+        </div>
+
+    </div>
+    <div class="d-block mb-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for constraint in constraints %}
+                <div class="mb-3">
+                    <label for="{{ constraint.id }}" class="form-label">{{ constraint.name }}*</label>
+
+                    <input type="number" step="any" class="form-control" id="{{ constraint.id }}"
+                           name="{{ constraint.id }}" required
+                    >
+                    <p style="color: gray" class="mt-2">{{ constraint.description }}</p>
+                </div>
+                <hr>
+            {% endfor %}
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}
