@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView
 from accounts.models import UserAccount
@@ -146,6 +145,41 @@ class ScholarshipCalculatorView(StudentRequired, TemplateView):
         return context
 
     def post(self, request):
-        keys = list(self.request.POST.dict().keys())
-        relevant_constraints = Constraint.objects.filter(pk__in=keys)
-        return super().render_to_response(self.get_context_data())
+
+        constraint_id_to_value = {}
+
+        for k, v in self.request.POST.dict().items():
+            if k == 'csrfmiddlewaretoken':
+                continue
+
+            if not v or v == '':
+                continue
+            constraint_id_to_value[int(k)] = v
+
+        print(constraint_id_to_value)
+        answer = []
+
+        for scholarship in Scholarship.objects.all():
+            constraints = scholarship.scholarshipconstraint_set.all()
+
+            relevant = True
+
+            for scholarship_constraint in constraints:
+
+                if scholarship_constraint.constraint.id not in constraint_id_to_value.keys():
+                    relevant = False
+                    break
+                submitted_value = float(constraint_id_to_value[scholarship_constraint.constraint.id])
+                if scholarship_constraint.min_value:
+                    if submitted_value < scholarship_constraint.min_value:
+                        relevant = False
+
+                        break
+                if scholarship_constraint.max_value:
+                    if submitted_value > scholarship_constraint.min_value:
+                        relevant = False
+                        break
+            if relevant:
+                answer.append(scholarship)
+
+        return render(self.request, 'pages/relevant-scholarships.html', {'scholarships': answer})

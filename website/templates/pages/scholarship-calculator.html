@@ -20,10 +20,11 @@
             {% csrf_token %}
             {% for constraint in constraints %}
                 <div class="mb-3">
-                    <label for="{{ constraint.id }}" class="form-label">{{ constraint.name }}*</label>
+                    <label for="{{ constraint.id }}" class="form-label">
+                        {{ constraint.name }}{% if constraint.required %}*{% endif %}</label>
 
                     <input type="number" step="any" class="form-control" id="{{ constraint.id }}"
-                           name="{{ constraint.id }}" required
+                           name="{{ constraint.id }}" {% if constraint.required %}required{% endif %}
                     >
                     <p style="color: gray" class="mt-2">{{ constraint.description }}</p>
                 </div>
