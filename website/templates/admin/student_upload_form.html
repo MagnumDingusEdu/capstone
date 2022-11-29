@@ -1,0 +1,37 @@
+{% extends 'admin/change_form.html' %}
+{% load admin_urls %}
+{% load i18n %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+    <ul class="messagelist">
+        <li class="warning">Download the template for the excel file <a href="{% static 'template.xlsx' %}">here.</a>
+        </li>
+    </ul>
+    <div id="content-main">
+        <form method="post" enctype="multipart/form-data" action="{% url 'upload_csv' %}">
+            {% csrf_token %}
+            <div>
+                <fieldset class="module aligned ">
+                    <div class="form-row">
+                        <p></p>
+                    </div>
+                    <div class="form-row field-excel_file">
+                        <div>
+                            <label class="required" for="id_excel_file">Excel file:</label>
+                            <input type="file" name="excel_file" required="" id="id_excel_file">
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <div class="submit-row">
+                    <input type="submit" value="Upload" class="default" name="_save"
+                           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

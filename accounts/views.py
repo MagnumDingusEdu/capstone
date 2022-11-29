@@ -1,9 +1,57 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.core.files.storage import FileSystemStorage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+import os
+from website.mixins import StaffRequired
 from .models import UserAccount, Student
+import requests
+from django.conf import settings
+
+
+class UploadCSVView(StaffRequired, TemplateView):
+    template_name = "admin/student_upload_form.html"
+
+    def post(self, request, **kwargs):
+        print(self.request.POST.dict())
+        print(self.request.FILES)
+
+        excel_file: InMemoryUploadedFile = self.request.FILES.get("excel_file")
+        file_name, file_extension = os.path.splitext(excel_file.name)
+        if file_extension not in ['.xls', '.xlsx']:
+            messages.error(self.request, "Only .xls and .xlsx files are allowed. Please try again", extra_tags="error")
+            return self.render_to_response(self.get_context_data())
+
+        FileSystemStorage(location=settings.MEDIA_ROOT / 'excel_files').save(excel_file.name, excel_file)
+
+        try:
+            resp = requests.post("http://localhost:6969/from-path/",
+                                 json={'path': f'http://localhost:8000/media/excel_files/{excel_file.name}'})
+
+            data = resp.json()
+            print(data)
+            for row in data['rows']:
+                email = row['email']
+                user = UserAccount.objects.filter(email=email)
+                if user:
+                    user = user.first()
+                    student = user.student
+
+                    student.roll_no = row['roll_no']
+                else:
+                    user = UserAccount.objects.create()
+        except Exception as e:
+            messages.error(self.request, "Failed to parse csv. Unable to connect to microservice. Error: " + str(e),
+                           extra_tags='error')
+            return self.render_to_response(self.get_context_data())
+        messages.success(self.request, "The excel file has been parsed successfully. Student data has been loaded")
+        return redirect("admin:accounts_student_changelist")
 
 
 class SignInView(TemplateView):
@@ -91,5 +139,3 @@ class SignUpView(TemplateView):
                 messages.error(request, "An error occurred while signing up : " + str(e))
 
         return super().render_to_response(self.get_context_data())
-
-

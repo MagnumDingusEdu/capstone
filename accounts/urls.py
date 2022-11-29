@@ -1,7 +1,7 @@
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, \
     PasswordResetConfirmView, LogoutView
 from django.urls import path
-from .views import SignUpView, SignInView
+from .views import SignUpView, SignInView, UploadCSVView
 
 password_reset_view = PasswordResetView.as_view(template_name="pages/forgot-password.html")
 password_reset_done_view = PasswordResetDoneView.as_view(template_name="pages/forgot-password-done.html")
@@ -16,5 +16,6 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
     path("sign-in/", SignInView.as_view(), name="sign-in"),
     path("sign-up/", SignUpView.as_view(), name="sign-up"),
+    path("upload_csv/", UploadCSVView.as_view(), name='upload_csv'),
 
 ]

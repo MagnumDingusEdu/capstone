@@ -74,3 +74,6 @@ class UserAccountAdmin(UserAdmin):
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('user', 'student_name', 'programme', 'branch_code', 'sex', 'adm_mode', 'cat_type')
     list_filter = ('sex', 'programme', 'adm_mode', 'cat_type')
+    change_list_template = 'admin/student_change_list.html'
+
+
