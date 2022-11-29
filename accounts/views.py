@@ -1,9 +1,20 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from .models import UserAccount, Student
+
+class UploadCSVView(TemplateView):
+    template_name = "admin/student_upload_form.html"
+
+    def post(self, request, **kwargs):
+        return redirect('/upload_csv')
+
+def parsed_csv_view(request):
+    print(request.body)
+    return HttpResponse(status=200)
 
 
 class SignInView(TemplateView):
