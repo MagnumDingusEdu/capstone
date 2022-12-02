@@ -108,9 +108,11 @@
                                     {% for notice in notice_category.notice_set.all %}
                                         <tr>
                                             <td><a
-                                                   {% if notice.attachment %}href="{{ notice.attachment.url }}" target="_blank"{% endif %}
+                                                    {% if notice.attachment %}href="{{ notice.attachment.url }}"
+                                                    target="_blank" {% elif notice.link %}href="{{ notice.link }}"
+                                                    target="_blank"{% endif %}
 
-                                                   class="fw-bolder ">{{ notice.title }}</a></td>
+                                                    class="fw-bolder ">{{ notice.title }}</a></td>
                                             <td><span class="fw-bold ">{{ notice.date }}</span></td>
                                         </tr>
                                     {% endfor %}

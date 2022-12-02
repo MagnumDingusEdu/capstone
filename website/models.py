@@ -149,7 +149,7 @@ class MCMApplication(models.Model):
                                           validators=[
                                               FileExtensionValidator(allowed_extensions=["pdf", 'jpg', 'png', 'jpeg'])])
     supporting_documents = models.FileField(help_text="Please upload supporting documents in a .zip format, if any",
-                                            blank=True, null=True)
+                                            blank=True, null=True, upload_to="supporting_documents")
 
     declaration = models.BooleanField(
         help_text="I acknowledge that i have read all the eligibility criteria of scholarship and i am eligible for "
@@ -185,7 +185,8 @@ class Notice(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True, unique=True, editable=False)
     category = models.ForeignKey(NoticeCategory, on_delete=models.CASCADE, blank=True, null=True)
     title = models.TextField()
-    attachment = models.FileField(blank=True, null=True)
+    attachment = models.FileField(blank=True, null=True, upload_to="notice_attachments")
+    link = models.CharField(max_length=1024, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):

@@ -21,13 +21,46 @@
     <meta name="theme-color" content="#ffffff">
 
     <link type="text/css" href="{% static 'dist/css/scholarship-portal.css' %}" rel="stylesheet">
+    <style>
+        .marquee {
+            width: 100%;
+            background-color: red;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .marquee p {
+            margin: 4px;
+            padding-bottom: 0;
+            padding-top: 0;
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+            font-weight: bolder;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(-100%, 0);
+            }
+        }
+    </style>
     {% block customStyles %}
 
     {% endblock %}
 </head>
 
 <body>
-
+<div class="marquee">
+    <p>This site is under maintainance. Content may not be accurate. Please refer to the <a
+            href="https://www.thapar.edu/admissions/pages/scholarships">Scholarship Page</a> on the thapar.edu website
+        for current scholarship information.</p>
+</div>
 {% block sidebars %} {% endblock %}
 {% block content %}    {% endblock %}
 
