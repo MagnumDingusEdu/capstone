@@ -95,11 +95,19 @@ class MCMTietApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
     template_name = "pages/mcm-tiet-application-form.html"
 
 
-class MCMTietApplicationListView(StudentRequired, TemplateView):
-    template_name = "pages/mcm-tiet-applications.html"
-    model = MCMTietApplication
+class ApplicationsListView(StudentRequired, TemplateView):
+    template_name = "pages/applications.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ApplicationsListView, self).get_context_data(**kwargs)
+        context['mcm_tiet_applications'] = MCMTietApplication.objects.filter(student=self.request.user.student)
+        # TODO: Add rest of the applications
+        return context
 
     def post(self, request):
+        # TODO: add paramater application_type, switch case based on that
+        # Select appropriate model (MCMTietApplication, MCMAlumini etc.) and delete
+        return HttpResponse("Failed. Please try again.")
         try:
             application = get_object_or_404(MCMTietApplication, pk=self.request.POST.get("application_id"))
             application.delete()

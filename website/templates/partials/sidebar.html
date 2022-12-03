@@ -81,14 +81,10 @@
                   </span>
                     </a>
                 </li>
-                <div class="w-100 border-bottom border-2 border-primary pt-2 mx-2  pb-1 mb-2">
-                <span class="text-dark">
-                My Applications
-                </span>
-                </div>
-                <li class="nav-item {% if page == 'mcm_tiet' %}active{% endif %}"
-                    title="Merit Cum Means Scholarship (TIET)">
-                    <a href="{% url 'website:mcm-tiet-application-list' %}" class="nav-link">
+                <hr>
+                <li class="nav-item {% if page == 'my_applications' %}active{% endif %}"
+                    title="My Submitted Applications">
+                    <a href="{% url 'website:applications-list' %}" class="nav-link">
                       <span class="sidebar-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                            class="bi bi-bookmarks-fill me-2" viewBox="0 0 20 20">
@@ -96,48 +92,10 @@
                       <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z"></path>
                     </svg>
                       </span>
-                        <span class="sidebar-text">MCM TIET</span>
+                        <span class="sidebar-text">My Applications</span>
                     </a>
                 </li>
-                <li class="nav-item {% if page == 'mcm_other' %}active{% endif %}"
-                    title="Merit Cum Means Scholarship (Other)">
-                    <a href="#" class="nav-link">
-                      <span class="sidebar-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                           class="bi bi-bookmarks-fill me-2" viewBox="0 0 20 20">
-                      <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z"></path>
-                      <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z"></path>
-                    </svg>
-                      </span>
-                        <span class="sidebar-text">MCM Other</span>
-                    </a>
-                </li>
-                <li class="nav-item {% if page == 'mcm_alumni' %}active{% endif %}"
-                    title="Merit Cum Means Scholarship (Alumni)">
-                    <a href="#" class="nav-link">
-                      <span class="sidebar-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                           class="bi bi-bookmarks-fill me-2" viewBox="0 0 20 20">
-                      <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z"></path>
-                      <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z"></path>
-                    </svg>
-                      </span>
-                        <span class="sidebar-text">MCM Alumni</span>
-                    </a>
-                </li>
-                <li class="nav-item {% if page == 'merit_alumni' %}active{% endif %}"
-                    title="Merit Scholarship  (Alumni)">
-                    <a href="#" class="nav-link">
-                      <span class="sidebar-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                           class="bi bi-bookmarks-fill me-2" viewBox="0 0 20 20">
-                      <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4z"></path>
-                      <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1H4.268z"></path>
-                    </svg>
-                      </span>
-                        <span class="sidebar-text">Merit Alumni</span>
-                    </a>
-                </li>
+
                 <hr>
                 <li class="nav-item {% if page == 'grievance_submit' %}active{% endif %}">
                     <a href="{% url 'website:grievance-submit-view' %}" class="nav-link">
