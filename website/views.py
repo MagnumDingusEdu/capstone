@@ -6,10 +6,12 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView
+from oauthlib.oauth2.rfc6749.errors import LoginRequired
+
 from accounts.models import UserAccount
-from website.forms import UserPasswordChangeForm, MCMApplicationForm, GrievanceForm
+from website.forms import UserPasswordChangeForm, MCMTietApplicationForm, GrievanceForm
 from website.mixins import StudentRequired, StaffRequired
-from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMApplication, Grievance, \
+from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMTietApplication, Grievance, \
     Constraint
 
 
@@ -18,7 +20,7 @@ def dashboard_redirector_view(request):
     if request.user.is_student():
         return redirect("website:student-dashboard")
     elif request.user.is_staff_member:
-        return redirect("/admin")
+        return redirect("website:staff-dashboard")
     else:
         return HttpResponse("You do not have permission to access this page.")
 
@@ -47,7 +49,7 @@ class NoticeBoardView(StudentRequired, ListView):
     model = NoticeCategory
 
 
-class ChangePasswordView(StudentRequired, FormView):
+class ChangePasswordView(LoginRequired, FormView):
     template_name = 'pages/change-password.html'
     form_class = UserPasswordChangeForm
 
@@ -68,14 +70,14 @@ class ScholarshipListView(StudentRequired, ListView):
     model = ScholarshipCategory
 
 
-class MCMScholarshipApplyView(SuccessMessageMixin, StudentRequired, CreateView):
-    model = MCMApplication
-    form_class = MCMApplicationForm
+class MCMTietApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
+    model = MCMTietApplication
+    form_class = MCMTietApplicationForm
 
     success_message = 'Your application was submitted successfully.'
 
     def get_success_url(self):
-        return reverse_lazy('website:mcm-scholarship-apply', kwargs={'scholarship_id': self.kwargs['scholarship_id']})
+        return reverse_lazy('website:mcm-tiet-apply', kwargs={'scholarship_id': self.kwargs['scholarship_id']})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -86,25 +88,25 @@ class MCMScholarshipApplyView(SuccessMessageMixin, StudentRequired, CreateView):
 
     def get_context_data(self, **kwargs):
         scholarship = get_object_or_404(Scholarship, pk=self.kwargs['scholarship_id'])
-        context = super(MCMScholarshipApplyView, self).get_context_data()
+        context = super(MCMTietApplicationView, self).get_context_data()
         context['scholarship'] = scholarship
         return context
 
-    template_name = "pages/mcm-application-form.html"
+    template_name = "pages/mcm-tiet-application-form.html"
 
 
-class MCMApplicationListView(StudentRequired, ListView):
-    template_name = "pages/mcm-applications.html"
-    model = MCMApplication
+class MCMTietApplicationListView(StudentRequired, TemplateView):
+    template_name = "pages/mcm-tiet-applications.html"
+    model = MCMTietApplication
 
     def post(self, request):
         try:
-            application = get_object_or_404(MCMApplication, pk=self.request.POST.get("application_id"))
+            application = get_object_or_404(MCMTietApplication, pk=self.request.POST.get("application_id"))
             application.delete()
         except Exception as e:
             messages.error(request, "Failed to withdraw application. Error : " + str(e))
         messages.success(request, "The specified application was successfully withdrawn")
-        return redirect(reverse_lazy("website:mcm-application-list"))
+        return redirect(reverse_lazy("website:mcm-tiet-application-list"))
 
 
 class GrievanceSubmitView(StudentRequired, SuccessMessageMixin, CreateView):

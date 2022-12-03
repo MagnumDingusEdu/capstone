@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.core.validators import MaxValueValidator, MinValueValidator, FileExtensionValidator
 from django.db import models
 
-from accounts.models import UserAccount, Student
+from accounts.models import UserAccount, Student, Session
 
 STATE_CHOICES = (
     ('Andhra Pradesh', 'Andhra Pradesh'),
@@ -66,8 +66,11 @@ class ScholarshipCategory(models.Model):
 
 class Scholarship(models.Model):
     class ScholarshipType(models.IntegerChoices):
-        MERIT = 1
-        MERIT_CUM_MEANS = 2
+        MCM_TIET = 1
+        MCM_ALUMNI = 2
+        MCM_OTHER = 3
+        MERIT_ALUMNI = 4
+        MERIT_AUTO = 5
 
     name = models.CharField(max_length=200)
     category = models.ForeignKey(ScholarshipCategory, on_delete=models.CASCADE)
@@ -83,7 +86,7 @@ class Scholarship(models.Model):
     constraints = models.ManyToManyField(Constraint, through="ScholarshipConstraint")
 
     def __str__(self):
-        return f"Scholarship | {self.name}"
+        return self.name
 
     def verbose_type(self):
         if self.scholarship_type == 1:
@@ -102,7 +105,7 @@ class ScholarshipConstraint(models.Model):
         return f"{self.constraint.name} constraint on [{self.scholarship.name}]"
 
 
-class MCMApplication(models.Model):
+class MCMTietApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
     contact_number = models.PositiveIntegerField()
@@ -204,3 +207,31 @@ class Grievance(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class ReceivedScholarship(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    year_of_study = models.CharField(max_length=1024, blank=True, null=True)
+    branch = models.CharField(max_length=1024, blank=True, null=True)
+    programme = models.CharField(blank=True, null=True, max_length=1024)
+
+    current_cgpa = models.FloatField(blank=True, null=True)
+    cgpa_1st_semester = models.FloatField(blank=True, null=True)
+    cgpa_2nd_semester = models.FloatField(blank=True, null=True)
+    cgpa_3rd_semester = models.FloatField(blank=True, null=True)
+    sgpa_5th_semester = models.FloatField(blank=True, null=True)
+    sgpa_6th_semester = models.FloatField(blank=True, null=True)
+    agpa = models.FloatField(blank=True, null=True)
+    marks = models.FloatField(blank=True, null=True)
+    jee_rank = models.FloatField(blank=True, null=True)
+    pcme_percentage = models.FloatField(blank=True, null=True)
+    pcb_percentage = models.FloatField(blank=True, null=True)
+    ti_rank = models.FloatField(blank=True, null=True)
+    tu_rank = models.FloatField(blank=True, null=True)
+    twelfth_overall_percentage = models.FloatField(blank=True, null=True)
+
+    amount = models.PositiveIntegerField()
+

@@ -5,13 +5,17 @@ from django.contrib.auth.models import Group
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import UserAccount, Student
+from .models import UserAccount, Student, Session
 
 admin.site.site_header = "Thapar Scholarship Portal"
 admin.site.site_title = "Thapar Scholarship Portal"
 admin.site.index_title = "Welcome to the Thapar Scholarship Portal"
 
+admin.site.index_template = "admin/custom_index.html"
+admin.autodiscover()
+
 admin.site.unregister(Group)
+
 
 
 class UserCreationForm(forms.ModelForm):
@@ -72,8 +76,11 @@ class UserAccountAdmin(UserAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'student_name', 'programme', 'branch_code', 'sex', 'adm_mode', 'cat_type')
-    list_filter = ('sex', 'programme', 'adm_mode', 'cat_type')
+    list_display = ('user', 'student_name', 'roll_no', 'branch_code', 'sex',)
+    list_filter = ('sex', 'programme', 'branch_code',)
     change_list_template = 'admin/student_change_list.html'
 
+    search_fields = ('student_name', 'user__email', 'father_name', 'mother_name', 'roll_no')
 
+
+admin.site.register(Session)

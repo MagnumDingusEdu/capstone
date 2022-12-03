@@ -6,12 +6,83 @@
     {% include 'partials/sidebar.html' with page="index" %}
 
 {% endblock %}
+{% block customStyles %}
+    <style>
+        .dashboard-title {
+            font-size: 4em !important;
+            font-weight: 300 !important;
+            line-height: inherit !important;
+        }
+
+        body {
+            letter-spacing: 0.7px;
+            background-color: #eee
+        }
+
+        p {
+            font-size: 14px
+        }
+
+
+        .pic {
+            margin-top: 30px;
+            margin-bottom: 20px
+        }
+
+        .card-block {
+            width: 200px;
+            border: 1px solid lightgrey;
+            border-radius: 5px !important;
+            background-color: #FAFAFA;
+            margin-bottom: 30px
+        }
+
+        .card-body.show {
+            display: block
+        }
+
+        .card {
+            padding-bottom: 20px;
+            box-shadow: 2px 2px 6px 0px rgb(200, 167, 216)
+        }
+
+        .radio {
+            display: inline-block;
+            border-radius: 0;
+            box-sizing: border-box;
+            cursor: pointer;
+            color: #000;
+            font-weight: 500;
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            filter: grayscale(100%)
+        }
+
+        .radio:hover {
+            box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+            -webkit-filter: grayscale(0%);
+            -moz-filter: grayscale(0%);
+            -o-filter: grayscale(0%);
+            filter: grayscale(0%);
+            text-decoration: none;
+        }
+
+
+        .a {
+            justify-content: center !important
+        }
+
+
+    </style>
+{% endblock %}
 {% block content %}
 
     <main class="content">
 
         {% include 'partials/navbar.html' %}
 
+        <h3 class="mt-3">Welcome</h3>
         {#  Info Cards  #}
         <div class="row mt-4">
             <div class="col-lg-4 col-sm-6 col-12">
@@ -59,56 +130,64 @@
             </div>
         </div>
 
-        {# Gym Visit Summary Table and Your Passes #}
+
         <div class="row">
-            <div class="col-12  mb-4">
-                <div class="card border-0 shadow">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h2 class="fs-5 fw-bold mb-0">Recent Gym Scans</h2>
-                            </div>
-                            <div class="col text-end">
-                                <a href="#" class="btn btn-sm btn-primary">See all</a>
+            <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div
+                                class="card text-center justify-content-center shaodw-lg card-1 border-0 bg-white px-sm-2">
+                            <div class="card-body show ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5><b>What would you like to do ?</b></h5>
+
+                                    </div>
+                                </div>
+                                <div
+                                        class="radio-group row justify-content-between px-3 text-center a mt-5">
+                                    <a class="col-auto mr-sm-2 mx-1 card-block py-0 text-center radio "
+                                       href="/admin">
+                                        <div class="flex-row">
+                                            <div class="col">
+                                                <div class="pic"><img class="irc_mut img-fluid"
+                                                                      src="{% static 'img/admin_panel.png' %}"
+                                                                      style="width: 100px; height: 100px;" alt=""></div>
+                                                <p>Open Admin Panel</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a class="col-auto ml-sm-2 mx-1 card-block py-0 text-center radio"
+                                       href="#">
+                                        <div class="flex-row">
+                                            <div class="col">
+                                                <div class="pic"><img class="irc_mut img-fluid"
+                                                                      src="{% static 'img/reports.png' %}"
+                                                                      style="width: 100px; height: 100px;" alt=""></div>
+                                                <p>View Reports</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a class="col-auto ml-sm-2 mx-1 card-block py-0 text-center radio"
+                                       href="#">
+                                        <div class="flex-row">
+                                            <div class="col">
+                                                <div class="pic"><img class="irc_mut img-fluid"
+                                                                      src="{% static 'img/upload_scholarship.png' %}"
+                                                                      style="width: 100px; height: 100px;" alt=""></div>
+                                                <p>Upload Scholarship Data</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                            <tr>
-                                <th class="border-bottom" scope="col">User Name</th>
-                                <th class="border-bottom" scope="col">Sessions Used</th>
-                                <th class="border-bottom" scope="col">Date of Visit</th>
-                                <th class="border-bottom" scope="col">Time of Visit</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th class="text-gray-900" scope="row">
-                                    Vividh Mariya
-                                </th>
-                                <td class="fw-bolder text-gray-500">
-                                    2.5
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    23rd Nov, 2022
-                                </td>
-                                <td class="fw-bolder text-gray-500">
-                                    4:23PM
-                                </td>
-                            </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
-
         </div>
-
-
         {% include 'partials/footer.html' %}
     </main>
 {% endblock %}

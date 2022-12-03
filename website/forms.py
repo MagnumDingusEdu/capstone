@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.forms import ModelForm
 
-from website.models import MCMApplication, Grievance
+from website.models import MCMTietApplication, Grievance
 
 
 class UserPasswordChangeForm(AdminPasswordChangeForm):
@@ -13,9 +13,9 @@ class UserPasswordChangeForm(AdminPasswordChangeForm):
         return self.user
 
 
-class MCMApplicationForm(ModelForm):
+class MCMTietApplicationForm(ModelForm):
     class Meta:
-        model = MCMApplication
+        model = MCMTietApplication
         fields = '__all__'
 
         exclude = ('remarks', 'status')

@@ -43,14 +43,28 @@
                     <div class="card-body">
                         <div class="media d-flex">
                             <div class="media-body text-right">
-                                <h3>{{ user.email }}</h3>
-                                <span>E-mail</span>
+                                <h3>{{ user.student.current_session }}</h3>
+                                <span>Current Session</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <div class="col-lg-4 col-sm-6 col-12">
+            <div class="card mb-2 mb-md-4">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-right">
+                                <h3>{{ user.student.roll_no }}</h3>
+                                <span>Roll Number</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
     </div>
 
