@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import dashboard_redirector_view, StudentDashboardView, StaffDashboardView, NoticeBoardView, \
     ChangePasswordView, ScholarshipListView, MCMTietApplicationView, ApplicationsListView, GrievanceSubmitView, \
-    GrievanceListView, AccountSettingsView, ScholarshipCalculatorView
+    GrievanceListView, AccountSettingsView, ScholarshipCalculatorView, ReportsView
 
 app_name = 'website'
 
@@ -19,5 +19,6 @@ urlpatterns = [
     path("grievance/submit/", GrievanceSubmitView.as_view(), name='grievance-submit-view'),
     path("grievances/", GrievanceListView.as_view(), name='grievance-list-view'),
     path("account/settings/", AccountSettingsView.as_view(), name='account-settings-view'),
-    path("scholarship-calculator", ScholarshipCalculatorView.as_view(), name='scholarship-calculator')
+    path("scholarship-calculator", ScholarshipCalculatorView.as_view(), name='scholarship-calculator'),
+    path("reports/", ReportsView.as_view(), name='reports')
 ]

@@ -17,7 +17,6 @@ admin.autodiscover()
 admin.site.unregister(Group)
 
 
-
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
@@ -83,4 +82,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ('student_name', 'user__email', 'father_name', 'mother_name', 'roll_no')
 
 
-admin.site.register(Session)
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'current')
+    list_filter = ('current',)

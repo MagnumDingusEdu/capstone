@@ -90,9 +90,15 @@ class Scholarship(models.Model):
 
     def verbose_type(self):
         if self.scholarship_type == 1:
-            return 'Merit Scholarship'
+            return "MCM_TIET"
+        elif self.scholarship_type == 2:
+            return "MCM_ALUMNI"
+        elif self.scholarship_type == 3:
+            return "MCM_OTHER"
+        elif self.scholarship_type == 4:
+            return "MERIT_ALUMNI"
         else:
-            return 'Merit cum Means Scholarship'
+            return "MERIT_AUTO"
 
 
 class ScholarshipConstraint(models.Model):
@@ -215,7 +221,7 @@ class ReceivedScholarship(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     year_of_study = models.CharField(max_length=1024, blank=True, null=True)
-    branch = models.CharField(max_length=1024, blank=True, null=True)
+    branch = models.CharField(max_length=1024, default="UNSPECIFIED")
     programme = models.CharField(blank=True, null=True, max_length=1024)
 
     current_cgpa = models.FloatField(blank=True, null=True)
@@ -235,3 +241,5 @@ class ReceivedScholarship(models.Model):
 
     amount = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.scholarship.name

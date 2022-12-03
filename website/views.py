@@ -1,18 +1,22 @@
+from io import BytesIO
+
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView
 from oauthlib.oauth2.rfc6749.errors import LoginRequired
 
-from accounts.models import UserAccount
+from accounts.models import UserAccount, Student, Session
 from website.forms import UserPasswordChangeForm, MCMTietApplicationForm, GrievanceForm
 from website.mixins import StudentRequired, StaffRequired
 from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMTietApplication, Grievance, \
-    Constraint
+    Constraint, ReceivedScholarship
+import pandas as pd
 
 
 @login_required
@@ -42,6 +46,83 @@ class StaffDashboardView(StaffRequired, TemplateView):
         context['user_count'] = UserAccount.objects.filter(role=UserAccount.STUDENT).count()
         context['scholarships'] = Scholarship.objects.all()
         return context
+
+
+class ReportsView(StaffRequired, TemplateView):
+    template_name = "pages/reports.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportsView, self).get_context_data(**kwargs)
+        context['user_count'] = Student.objects.all().count()
+        context['scholarship_amount'] = ReceivedScholarship.objects.all().aggregate(Sum('amount'))['amount__sum'] or 0
+        context['scholarship_count'] = ReceivedScholarship.objects.all().count()
+        context['scholarship_percentage'] = Student.objects.filter(
+            receivedscholarship__isnull=False).count() / Student.objects.all().count() * 100
+        context['female_count'] = Student.objects.filter(receivedscholarship__isnull=False, sex="F").count()
+        context['male_count'] = Student.objects.filter(receivedscholarship__isnull=False, sex="M").count()
+        context['sessions'] = Session.objects.all()
+        historical_data = []
+
+        for i, session in enumerate(Session.objects.all().order_by('-name')):
+            amount = ReceivedScholarship.objects.filter(session=session).aggregate(Sum('amount'))['amount__sum'] or 0
+            historical_data.append({'id': i, 'session': session.name, 'scholarship_amount': amount})
+
+        context['historical_data'] = historical_data
+        return context
+
+    def post(self, *args, **kwargs):
+        session_id = self.request.POST.get("session")
+        session = get_object_or_404(Session, pk=session_id)
+        io = BytesIO()
+        writer = pd.ExcelWriter(io)
+
+        branches = ReceivedScholarship.objects \
+            .order_by('branch').values_list('branch', flat=True).distinct()
+
+        for branch in branches:
+            scholarships = ReceivedScholarship.objects.filter(branch=branch, session=session)
+            prepped_dataset = []
+
+            for s in scholarships:
+                prepped_dataset.append({
+                    'Name': s.student.user.first_name + " " + s.student.user.last_name,
+                    'Roll No': s.student.roll_no,
+                    'E-mail': s.student.user.email,
+                    'Received Scholarship': s.scholarship.name,
+                    'Scholarship Type': s.scholarship.verbose_type(),
+                    'Amount': s.amount,
+                    'current_cgpa': s.current_cgpa,
+                    'cgpa_1st_semester': s.cgpa_1st_semester,
+                    'cgpa_2nd_semester': s.cgpa_2nd_semester,
+                    'cgpa_3rd_semester': s.cgpa_3rd_semester,
+                    'sgpa_5th_semester': s.sgpa_5th_semester,
+                    'sgpa_6th_semester': s.sgpa_6th_semester,
+                    'agpa': s.agpa,
+                    'marks': s.marks,
+                    'jee_rank': s.jee_rank,
+                    'pcme_percentage': s.pcme_percentage,
+                    'pcb_percentage': s.pcb_percentage,
+                    'ti_rank': s.ti_rank,
+                    'tu_rank': s.tu_rank,
+                    'twelfth_overall_percentage': s.twelfth_overall_percentage,
+                })
+
+            df = pd.DataFrame(prepped_dataset)
+
+            df = df.dropna(axis=1, how='all')
+            df.to_excel(writer, sheet_name=branch, index=False)
+            # Auto-adjust columns' width
+            for column in df:
+                column_width = max(df[column].astype(str).map(len).max(), len(column)) + 10
+                col_idx = df.columns.get_loc(column)
+                writer.sheets[branch].set_column(col_idx, col_idx, column_width)
+
+        writer.close()
+
+        resp_file = io.getvalue()
+        response = HttpResponse(resp_file, content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename=Scholarship Report {session.name}.xls'
+        return response
 
 
 class NoticeBoardView(StudentRequired, ListView):

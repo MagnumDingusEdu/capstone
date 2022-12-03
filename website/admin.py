@@ -130,7 +130,6 @@ class GrievanceAdmin(SummernoteModelAdmin, admin.ModelAdmin):
 @admin.register(ReceivedScholarship)
 class ReceivedScholarshipAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'student',
         'scholarship',
         'session',
