@@ -2,7 +2,8 @@ from django.urls import path
 from .views import dashboard_redirector_view, StudentDashboardView, StaffDashboardView, NoticeBoardView, \
     ChangePasswordView, ScholarshipListView, MCMTietApplicationView, MCMAlumniApplicationView, MCMOtherApplicationView, \
     ApplicationsListView, GrievanceSubmitView, \
-    GrievanceListView, AccountSettingsView, ScholarshipCalculatorView, ReportsView
+    GrievanceListView, AccountSettingsView, ScholarshipCalculatorView, ReportsView, \
+    UploadScholarshipsView, UploadAccountsView
 
 app_name = 'website'
 
@@ -27,5 +28,7 @@ urlpatterns = [
     path("grievances/", GrievanceListView.as_view(), name='grievance-list-view'),
     path("account/settings/", AccountSettingsView.as_view(), name='account-settings-view'),
     path("scholarship-calculator", ScholarshipCalculatorView.as_view(), name='scholarship-calculator'),
-    path("reports/", ReportsView.as_view(), name='reports')
+    path("reports/", ReportsView.as_view(), name='reports'),
+    path("upload-scholarship/", UploadScholarshipsView.as_view(), name='upload-scholarship-data'),
+    path("upload-account/", UploadAccountsView.as_view(), name='upload-account-data')
 ]
