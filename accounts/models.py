@@ -10,9 +10,9 @@ from .managers import CustomUserManager
 
 class UserAccount(AbstractUser):
     username = None
-    email = models.EmailField(_('email address'), unique=True)
+    email = models.EmailField(_("email address"), unique=True)
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
@@ -21,14 +21,14 @@ class UserAccount(AbstractUser):
     STAFF = 2
 
     ROLE_CHOICES = (
-        (STUDENT, 'Student'),
-        (STAFF, 'Staff Member'),
+        (STUDENT, "Student"),
+        (STAFF, "Staff Member"),
     )
 
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=1)
 
     class Meta:
-        app_label = 'accounts'
+        app_label = "accounts"
 
     def __str__(self):
         return self.email
@@ -77,4 +77,3 @@ class Student(models.Model):
     branch_desc = models.CharField(max_length=1024, blank=True, null=True)
 
     app_no = models.PositiveIntegerField(blank=True, null=True)
-
