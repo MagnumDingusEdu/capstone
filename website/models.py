@@ -217,11 +217,9 @@ class MCMAlumniApplication(models.Model):
 
     bank_name = models.CharField(max_length=255,
                                  help_text="Student's Bank Name")
-    bank_name = models.CharField(max_length=255,
-                                 help_text="Student's Bank Name")
     bank_account_number = models.CharField(max_length=255,
                                            help_text="Bank Savings Account Number")
-    bank_name = models.CharField(max_length=255,
+    banK_address = models.CharField(max_length=255,
                                  help_text="Bank Branch Address")
     bank_ifsc_code = models.CharField(max_length=255,
                                       help_text="Bank IFSC Code")
@@ -278,11 +276,9 @@ class MCMOtherApplication(models.Model):
 
     bank_name = models.CharField(max_length=255,
                                  help_text="Student's Bank Name")
-    bank_name = models.CharField(max_length=255,
-                                 help_text="Student's Bank Name")
     bank_account_number = models.CharField(max_length=255,
                                            help_text="Bank Savings Account Number")
-    bank_name = models.CharField(max_length=255,
+    banK_address = models.CharField(max_length=255,
                                  help_text="Bank Branch Address")
     bank_ifsc_code = models.CharField(max_length=255,
                                       help_text="Bank IFSC Code")
