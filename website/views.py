@@ -12,10 +12,13 @@ from django.views.generic import TemplateView, ListView, FormView, CreateView
 from oauthlib.oauth2.rfc6749.errors import LoginRequired
 
 from accounts.models import UserAccount, Student, Session
-from website.forms import UserPasswordChangeForm, MCMTietApplicationForm, GrievanceForm
+from website.forms import UserPasswordChangeForm, MCMTietApplicationForm, MCMOtherApplicationForm, \
+    MCMAlumniApplicationForm, GrievanceForm
 from website.mixins import StudentRequired, StaffRequired
-from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMTietApplication, Grievance, \
+from website.models import Scholarship, NoticeCategory, ScholarshipCategory, Notice, MCMTietApplication, \
+    MCMOtherApplication, MCMAlumniApplication, Grievance, \
     Constraint, ReceivedScholarship
+
 import pandas as pd
 
 
@@ -174,6 +177,56 @@ class MCMTietApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
         return context
 
     template_name = "pages/mcm-tiet-application-form.html"
+
+
+class MCMAlumniApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
+    model = MCMAlumniApplication
+    form_class = MCMAlumniApplicationForm
+
+    success_message = 'Your application was submitted successfully.'
+
+    def get_success_url(self):
+        return reverse_lazy('website:mcm-alumni-apply', kwargs={'scholarship_id': self.kwargs['scholarship_id']})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        scholarship_id = self.kwargs['scholarship_id']
+        kwargs['student_id'] = self.request.user.student.id
+        kwargs['scholarship_id'] = scholarship_id
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        scholarship = get_object_or_404(Scholarship, pk=self.kwargs['scholarship_id'])
+        context = super(MCMAlumniApplicationView, self).get_context_data()
+        context['scholarship'] = scholarship
+        return context
+
+    template_name = "pages/mcm-tiet-application-form.html"
+
+class MCMOtherApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
+    model = MCMOtherApplication
+    form_class = MCMOtherApplicationForm
+
+    success_message = 'Your application was submitted successfully.'
+
+    def get_success_url(self):
+        return reverse_lazy('website:mcm-other-apply', kwargs={'scholarship_id': self.kwargs['scholarship_id']})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        scholarship_id = self.kwargs['scholarship_id']
+        kwargs['student_id'] = self.request.user.student.id
+        kwargs['scholarship_id'] = scholarship_id
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        scholarship = get_object_or_404(Scholarship, pk=self.kwargs['scholarship_id'])
+        context = super(MCMOtherApplicationView, self).get_context_data()
+        context['scholarship'] = scholarship
+        return context
+
+    template_name = "pages/mcm-tiet-application-form.html"
+
 
 
 class ApplicationsListView(StudentRequired, TemplateView):

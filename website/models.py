@@ -66,6 +66,7 @@ class ScholarshipCategory(models.Model):
 
 class Scholarship(models.Model):
     class ScholarshipType(models.IntegerChoices):
+        # NOTE: don't change the integer values
         MCM_TIET = 1
         MCM_ALUMNI = 2
         MCM_OTHER = 3
@@ -88,6 +89,7 @@ class Scholarship(models.Model):
     def __str__(self):
         return self.name
 
+    @property
     def verbose_type(self):
         if self.scholarship_type == 1:
             return "MCM_TIET"
@@ -112,6 +114,7 @@ class ScholarshipConstraint(models.Model):
 
 
 class MCMTietApplication(models.Model):
+    """Scholarship Type: MCM_TIET = 1"""
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
     contact_number = models.PositiveIntegerField()
@@ -176,6 +179,48 @@ class MCMTietApplication(models.Model):
     class Meta:
         verbose_name_plural = "Merit cum Means Applications"
         verbose_name = "Merit cum means Application"
+
+
+class MCMAlumniApplication(models.Model):
+    """Scholarship Type: MCM_ALUMNI = 2"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
+
+    declaration = models.BooleanField(
+        help_text="I acknowledge that I have read all the eligibility criteria of this scholarship and I am eligible "
+                  "for applying to this scholarship.")
+
+    status = models.CharField(max_length=1024, default='PENDING',
+                              choices=(('PENDING', 'PENDING'), ('APPROVED', 'APPROVED'), ('REJECTED', 'REJECTED')))
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Application for [{self.scholarship.name[:15]}...]"
+
+    class Meta:
+        verbose_name_plural = "Merit cum Means Alumni Applications"
+        verbose_name = "Merit cum Means Alumni Application"
+
+
+class MCMOtherApplication(models.Model):
+    """Scholarship Type: MCM_OTHER = 3"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
+
+    declaration = models.BooleanField(
+        help_text="I acknowledge that I have read all the eligibility criteria of this scholarship and I am eligible "
+                  "for applying to this scholarship.")
+
+    status = models.CharField(max_length=1024, default='PENDING',
+                              choices=(('PENDING', 'PENDING'), ('APPROVED', 'APPROVED'), ('REJECTED', 'REJECTED')))
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Application for [{self.scholarship.name[:15]}...]"
+
+    class Meta:
+        verbose_name_plural = "Merit cum Means Other Applications"
+        verbose_name = "Merit cum Means Other Application"
 
 
 class NoticeCategory(models.Model):

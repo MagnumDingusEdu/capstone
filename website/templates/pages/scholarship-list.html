@@ -111,12 +111,24 @@
                                                 scholarships:</b> {{ scholarship.number_of_scholarships }}</li>
                                         <li class="list-group-item"><b>Value of
                                             scholarship:</b> {{ scholarship.value_of_scholarship }}</li>
+                                        <li class="list-group-item">
+                                            <b>Type of scholarship:</b> {{ scholarship.verbose_type }}
+                                        </li>
                                         <li class="list-group-item"><b>How to apply: </b>
-                                            {% if scholarship.scholarship_type == 1 %}Allotted automatically. No need to
-                                                apply
-                                            {% else %}
+                                            {% if scholarship.scholarship_type == 1 %}
                                                 <a href="{% url 'website:mcm-tiet-apply' scholarship.id %}"
                                                    class="btn ms-1 btn-sm btn-primary">Apply here</a>
+
+                                            {% elif scholarship.scholarship_type == 2 %}
+                                                <a href="{% url 'website:mcm-alumni-apply' scholarship.id %}"
+                                                   class="btn ms-1 btn-sm btn-primary">Apply here</a>
+
+                                            {% elif scholarship.scholarship_type == 3 %}
+                                                <a href="{% url 'website:mcm-other-apply' scholarship.id %}"
+                                                   class="btn ms-1 btn-sm btn-primary">Apply here</a>
+
+                                            {% else %}
+                                                Allotted automatically. No need to apply.
                                             {% endif %}
                                         </li>
                                     </ul>

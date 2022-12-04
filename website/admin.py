@@ -2,7 +2,7 @@ from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
 from .models import Scholarship, ScholarshipConstraint, Constraint, Notice, NoticeCategory, ScholarshipCategory, \
-    MCMTietApplication, Grievance, ReceivedScholarship
+    MCMTietApplication, MCMOtherApplication, MCMAlumniApplication, Grievance, ReceivedScholarship
 
 
 class ScholarshipConstraintInlineAdmin(admin.StackedInline):
@@ -110,6 +110,20 @@ class MCMApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
         'previous_year_scholarship',
     )
 
+    readonly_fields = ('student', 'scholarship', 'id')
+    search_fields = ('student__user__first_name', 'student__user__last_name', 'scholarship__name')
+
+
+@admin.register(MCMAlumniApplication)
+class MCMAlumniApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+    summernote_fields = ('remarks',)
+    readonly_fields = ('student', 'scholarship', 'id')
+    search_fields = ('student__user__first_name', 'student__user__last_name', 'scholarship__name')
+
+
+@admin.register(MCMOtherApplication)
+class MCMOtherApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+    summernote_fields = ('remarks',)
     readonly_fields = ('student', 'scholarship', 'id')
     search_fields = ('student__user__first_name', 'student__user__last_name', 'scholarship__name')
 
