@@ -24,33 +24,50 @@ class UploadCSVView(StaffRequired, TemplateView):
 
         excel_file: InMemoryUploadedFile = self.request.FILES.get("excel_file")
         file_name, file_extension = os.path.splitext(excel_file.name)
-        if file_extension not in ['.xls', '.xlsx']:
-            messages.error(self.request, "Only .xls and .xlsx files are allowed. Please try again", extra_tags="error")
+        if file_extension not in [".xls", ".xlsx"]:
+            messages.error(
+                self.request,
+                "Only .xls and .xlsx files are allowed. Please try again",
+                extra_tags="error",
+            )
             return self.render_to_response(self.get_context_data())
 
-        FileSystemStorage(location=settings.MEDIA_ROOT / 'excel_files').save(excel_file.name, excel_file)
+        FileSystemStorage(location=settings.MEDIA_ROOT / "excel_files").save(
+            excel_file.name, excel_file
+        )
 
         try:
-            resp = requests.post("http://localhost:6969/from-path/",
-                                 json={'path': f'http://localhost:8000/media/excel_files/{excel_file.name}'})
+            resp = requests.post(
+                "http://localhost:6969/from-path/",
+                json={
+                    "path": f"http://localhost:8000/media/excel_files/{excel_file.name}"
+                },
+            )
 
             data = resp.json()
             print(data)
-            for row in data['rows']:
-                email = row['email']
+            for row in data["rows"]:
+                email = row["email"]
                 user = UserAccount.objects.filter(email=email)
                 if user:
                     user = user.first()
                     student = user.student
 
-                    student.roll_no = row['roll_no']
+                    student.roll_no = row["roll_no"]
                 else:
                     user = UserAccount.objects.create()
         except Exception as e:
-            messages.error(self.request, "Failed to parse csv. Unable to connect to microservice. Error: " + str(e),
-                           extra_tags='error')
+            messages.error(
+                self.request,
+                "Failed to parse csv. Unable to connect to microservice. Error: "
+                + str(e),
+                extra_tags="error",
+            )
             return self.render_to_response(self.get_context_data())
-        messages.success(self.request, "The excel file has been parsed successfully. Student data has been loaded")
+        messages.success(
+            self.request,
+            "The excel file has been parsed successfully. Student data has been loaded",
+        )
         return redirect("admin:accounts_student_changelist")
 
 
@@ -69,7 +86,9 @@ class SignInView(TemplateView):
 
         user_account = UserAccount.objects.filter(email=email)
         if user_account.exists() and not user_account.first().is_active:
-            context["errors"] = "This user account is temporarily deactivated. Please contact us for further details"
+            context[
+                "errors"
+            ] = "This user account is temporarily deactivated. Please contact us for further details"
             return super().render_to_response(context)
 
         user = authenticate(email=email, password=password)
@@ -115,10 +134,12 @@ class SignUpView(TemplateView):
             error = True
 
         if UserAccount.objects.filter(email=email).exists():
-            messages.error(request, "This e-mail address is already registered. Please log in.")
+            messages.error(
+                request, "This e-mail address is already registered. Please log in."
+            )
             return redirect("sign-in")
 
-        domain = email.split('@')[1]
+        domain = email.split("@")[1]
         domain_list = {"thapar.edu"}
         if domain not in domain_list:
             messages.error(request, "Only @thapar.edu e-mail addresses are allowed")
@@ -136,6 +157,8 @@ class SignUpView(TemplateView):
                 messages.success(request, "Registered successfully! Please log in now")
                 return redirect("sign-in")
             except Exception as e:
-                messages.error(request, "An error occurred while signing up : " + str(e))
+                messages.error(
+                    request, "An error occurred while signing up : " + str(e)
+                )
 
         return super().render_to_response(self.get_context_data())
