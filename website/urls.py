@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import (
     dashboard_redirector_view,
     StudentDashboardView,
@@ -15,6 +16,8 @@ from .views import (
     AccountSettingsView,
     ScholarshipCalculatorView,
     ReportsView,
+    UploadScholarshipsView,
+    UploadAccountsView
 )
 
 app_name = "website"
@@ -57,4 +60,6 @@ urlpatterns = [
         name="scholarship-calculator",
     ),
     path("reports/", ReportsView.as_view(), name="reports"),
+    path("upload-scholarship/", UploadScholarshipsView.as_view(), name='upload-scholarship-data'),
+    path("upload-account/", UploadAccountsView.as_view(), name='upload-account-data')
 ]

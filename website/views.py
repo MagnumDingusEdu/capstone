@@ -12,13 +12,17 @@ from django.views.generic import TemplateView, ListView, FormView, CreateView
 from oauthlib.oauth2.rfc6749.errors import LoginRequired
 
 from accounts.models import UserAccount, Student, Session
+
 from website.forms import (
     UserPasswordChangeForm,
     MCMTietApplicationForm,
     MCMOtherApplicationForm,
     MCMAlumniApplicationForm,
     GrievanceForm,
+    UploadAccountsForm,
+    UploadScholarshipsForm
 )
+
 from website.mixins import StudentRequired, StaffRequired
 from website.models import (
     Scholarship,
@@ -173,6 +177,13 @@ class ReportsView(StaffRequired, TemplateView):
         ] = f"attachment; filename=Scholarship Report {session.name}.xls"
         return response
 
+class UploadScholarshipsView(StaffRequired, FormView):
+    template_name = "pages/upload-scholarship-data.html"
+    form_class = UploadScholarshipsForm
+
+class UploadAccountsView(StaffRequired, FormView):
+    template_name = "pages/upload-account-data.html"
+    form_class = UploadAccountsForm
 
 class NoticeBoardView(StudentRequired, ListView):
     template_name = "pages/notices.html"

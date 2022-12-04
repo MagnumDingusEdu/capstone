@@ -189,7 +189,7 @@
 
 
                 <li class="nav-item {% if page == 'upload_scholarship_data' %}active {% endif %} ">
-                    <a href="#" class="nav-link">
+                    <a href="{% url 'website:upload-scholarship-data' %}" class="nav-link">
                       <span class="sidebar-icon">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                             class="bi bi-cloud-upload-fill me-2" viewBox="0 0 20 20">
@@ -201,7 +201,7 @@
                     </a>
                 </li>
                 <li class="nav-item {% if page == 'upload_student_data' %}active {% endif %} ">
-                    <a href="#" class="nav-link">
+                    <a href="{% url 'website:upload-account-data' %}" class="nav-link">
                       <span class="sidebar-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                            class="bi bi-cloud-upload-fill me-2" viewBox="0 0 20 20">
