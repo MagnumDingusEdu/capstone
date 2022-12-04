@@ -186,6 +186,46 @@ class MCMAlumniApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
 
+    photograph = models.FileField(help_text="Passport size photograph in JPG/PNG under 2 MB.",
+                                  blank=True, null=True, upload_to="photographs")
+
+    roll_no = models.CharField(max_length=20, help_text="Registration/Roll No")
+    personal_contact_number = models.PositiveIntegerField()
+    year = models.CharField(max_length=20, help_text="Year")
+    branch = models.CharField(max_length=20, help_text="Branch")
+
+    jee_main_rank = models.CharField(max_length=255,
+                                     help_text="JEE Main Rank")
+    current_cgpa = models.CharField(max_length=255,
+                                    help_text="Current CGPA")
+
+    father_name = models.CharField(max_length=255,
+                                   help_text="Father's Name")
+    father_profession = models.CharField(max_length=255,
+                                         help_text="Father's Profession")
+    father_contact_number = models.PositiveIntegerField(help_text="Father's Contact Number")
+
+    mother_name = models.CharField(max_length=255,
+                                   help_text="Mother's Name")
+    mother_profession = models.CharField(max_length=255,
+                                         help_text="Mother's Profession")
+
+    mother_contact_number = models.PositiveIntegerField(help_text="Mother's Contact Number")
+
+    family_income_per_annum = models.CharField(max_length=255,
+                                               help_text="Family income per annum")
+
+    bank_name = models.CharField(max_length=255,
+                                 help_text="Student's Bank Name")
+    bank_name = models.CharField(max_length=255,
+                                 help_text="Student's Bank Name")
+    bank_account_number = models.CharField(max_length=255,
+                                           help_text="Bank Savings Account Number")
+    bank_name = models.CharField(max_length=255,
+                                 help_text="Bank Branch Address")
+    bank_ifsc_code = models.CharField(max_length=255,
+                                      help_text="Bank IFSC Code")
+
     declaration = models.BooleanField(
         help_text="I acknowledge that I have read all the eligibility criteria of this scholarship and I am eligible "
                   "for applying to this scholarship.")
@@ -207,9 +247,8 @@ class MCMOtherApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE)
 
-
     photograph = models.FileField(help_text="Passport size photograph in JPG/PNG under 2 MB.",
-                                     blank=True, null=True, upload_to="photographs")
+                                  blank=True, null=True, upload_to="photographs")
 
     roll_no = models.CharField(max_length=20, help_text="Registration/Roll No")
     personal_contact_number = models.PositiveIntegerField()
