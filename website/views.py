@@ -176,7 +176,7 @@ class MCMTietApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
         context['scholarship'] = scholarship
         return context
 
-    template_name = "pages/mcm-tiet-application-form.html"
+    template_name = "pages/mcm-generic-application-form.html"
 
 
 class MCMAlumniApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
@@ -201,7 +201,7 @@ class MCMAlumniApplicationView(SuccessMessageMixin, StudentRequired, CreateView)
         context['scholarship'] = scholarship
         return context
 
-    template_name = "pages/mcm-tiet-application-form.html"
+    template_name = "pages/mcm-generic-application-form.html"
 
 class MCMOtherApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
     model = MCMOtherApplication
@@ -225,7 +225,7 @@ class MCMOtherApplicationView(SuccessMessageMixin, StudentRequired, CreateView):
         context['scholarship'] = scholarship
         return context
 
-    template_name = "pages/mcm-tiet-application-form.html"
+    template_name = "pages/mcm-generic-application-form.html"
 
 
 
@@ -235,7 +235,9 @@ class ApplicationsListView(StudentRequired, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ApplicationsListView, self).get_context_data(**kwargs)
         context['mcm_tiet_applications'] = MCMTietApplication.objects.filter(student=self.request.user.student)
-        # TODO: Add rest of the applications
+        context['mcm_other_applications'] = MCMOtherApplication.objects.filter(student=self.request.user.student)
+        context['mcm_alumni_applications'] = MCMAlumniApplication.objects.filter(student=self.request.user.student)
+
         return context
 
     def post(self, request):

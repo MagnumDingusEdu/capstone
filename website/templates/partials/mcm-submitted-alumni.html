@@ -1,0 +1,122 @@
+<tr>
+    <td><a href="#">MCM-ALUMNI-{{ application.id }}</a></td>
+    <td>{{ application.scholarship.name }}</td>
+    <td>
+        <button type="button"
+                class="btn btn-sm btn-{% if application.status == 'PENDING' %}warning{% elif application.status == 'REJECTED' %}danger{% else %}success{% endif %}">
+            {{ application.status }}</button>
+    </td>
+    <td>
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-outline-info me-2  mb-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#alummodal-{{ application.id }}-details">View
+                    Details
+                </button>
+                <div class="modal fade" id="alummodal-{{ application.id }}-details"
+                     tabindex="-1"
+                     style="display: none;"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"><h2
+                                    class="h6 modal-title">Application Details</h2>
+                                <button type="button" class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-wrap">
+                                <p><b>Scholarship
+                                    Name: </b> {{ application.scholarship.name }}
+                                </p>
+
+                                <hr>
+
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-outline-secondary mb-3 me-2" type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#alummodal-{{ application.id }}-remarks">
+                    View Remarks
+                </button>
+                <div class="modal fade" id="alummodal-{{ application.id }}-remarks"
+                     tabindex="-1"
+                     style="display: none;"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"><h2
+                                    class="h6 modal-title">Remarks</h2>
+                                <button type="button" class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-wrap">
+                                {% if application.remarks %}
+                                    {{ application.remarks | safe }} {% else %} There are no
+                                    remarks
+                                    yet.{% endif %}
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if  application.status == 'PENDING' %}
+                    <button class="btn btn-danger mb-3" type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#alummodal-{{ application.id }}-withdraw">
+                        Withdraw Application
+                    </button>{% endif %}
+                <div class="modal fade" id="alummodal-{{ application.id }}-withdraw"
+                     tabindex="-1"
+                     style="display: none;"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"><h2
+                                    class="h6 modal-title">Are you sure?</h2>
+                                <button type="button" class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-wrap">
+                                This action cannot be undone. If you withdraw the
+                                application, you will need to resubmit a new
+                                application.
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        data-bs-dismiss="modal">Cancel
+                                </button>
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="application_id"
+                                           value="{{ application.id }}">
+                                    <button type="submit" class="btn btn-danger">
+                                        Withdraw
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </td>
+</tr>
