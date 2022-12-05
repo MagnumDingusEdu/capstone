@@ -455,11 +455,9 @@ class CertificateRequest(models.Model):
 
     def save(self, *args, **kwargs):
         if self.approved:
-            css = settings.BASE_DIR / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.css"
             rendered_certificate = render_to_string("pdfs/scholarship_certificate.html", {
                 'date': self.date_approved.date(),
                 'image_path': finders.find('signature.png'),
-                'css_path': css,
                 'ref_no': self.id,
                 'name': self.student.student_name or self.student.user.get_full_name(),
                 'roll_no': self.student.roll_no,
@@ -488,7 +486,6 @@ class CertificateRequest(models.Model):
             certificate_name = f"scholarship_certificate_{uuid4()}.pdf"
             pdfkit.from_string(rendered_certificate,
                                settings.MEDIA_ROOT / certificate_name,
-                               css=css,
                                options=options)
             self.certificate.name = certificate_name
 
