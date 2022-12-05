@@ -8,7 +8,52 @@
     {% include 'partials/sidebar.html' with page="upload_scholarship_data" %}
 
 {% endblock %}
+{% block customScripts %}
+    <script>
+        let optionsCache = [];
 
+        // Restore select to original state
+        function restoreOptions() {
+            const sel = document.getElementById('scholarship');
+            sel.options.length = 0;
+            for (var i = 0, iLen = optionsCache.length; i < iLen; i++) {
+                sel.appendChild(optionsCache[i]);
+            }
+        }
+
+        (() => {
+            // Load cache
+            var sel = document.getElementById('scholarship');
+            for (var i = 0, iLen = sel.options.length; i < iLen; i++) {
+                optionsCache.push(sel.options[i]);
+            }
+        })()
+
+        function filterResults(first_filter) {
+
+            const selectedId = first_filter.value;
+            const toFilter = document.querySelector("#scholarship");
+
+            filterItems(selectedId)
+
+        }
+
+        function filterItems(id) {
+            restoreOptions();
+            const sel = document.getElementById("scholarship")
+
+            for (var i = sel.options.length - 1; i >= 0; i--) {
+                opt = sel.options[i];
+                const category = opt.getAttribute('category');
+                if (category !== id && category !== null) {
+                    sel.removeChild(opt)
+                }
+            }
+
+        }
+
+    </script>
+{% endblock %}
 {% block content %}
 
     <main class="content">
@@ -24,10 +69,51 @@
 
         </div>
         <div class="d-block mb-4">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form | crispy }}
-                <button class="btn btn-primary" type="submit">Add Scholarship Entries</button>
+                <div class="mb-3">
+                    <label for="category">Session</label>
+                    <select id="category" class="form-select" required>
+                        <option value="" selected disabled>Choose session</option>
+                        {% for session in sessions %}
+                            <option value="{{ session.id }}">{{ session.name }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="category">Scholarship Category</label>
+                    <select id="category" class="form-select" required onchange="filterResults(this)">
+                        <option value="" selected disabled>Choose category</option>
+                        {% for scholarship_category in scholarship_categories %}
+                            <option value="{{ scholarship_category.id }}">{{ scholarship_category.name }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="scholarship">Scholarship</label>
+                    <select id="scholarship" class="form-select" required name="scholarship_id">
+                        <option value="" selected disabled>Choose scholarship</option>
+                        {% for scholarship in scholarships %}
+                            <option category="{{ scholarship.category_id }}" value="{{ scholarship.id }}">
+                                {{ scholarship.name }}</option>
+                        {% endfor %}
+
+                    </select>
+                    <div class="invalid-feedback">Example invalid select feedback</div>
+                </div>
+                <div class="mb-3">
+                    <label for="file">Excel file</label>
+                    <input type="file" id="file" class="form-control" aria-label="file example" required name="file">
+                    `
+                </div>
+
+                <div class="mb-3">
+                    <a target="_blank" href="{% static 'SCHOLARSHIP_UPLOAD_TEMPLATE.xlsx' %}"
+                       class="btn btn btn-outline-secondary">Download Template File</a>
+                    <button class="btn btn-primary" type="submit">Upload Data</button>
+                </div>
             </form>
         </div>
 

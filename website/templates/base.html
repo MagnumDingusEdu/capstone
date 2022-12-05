@@ -61,7 +61,14 @@
             href="https://www.thapar.edu/admissions/pages/scholarships">Scholarship Page</a> on the thapar.edu website
         for current scholarship information.</p>
 </div>
+
+
 {% block sidebars %} {% endblock %}
+{% block m %}
+    <div class="content mt-3">
+        {% include 'partials/message-alerts.html' %}
+    </div>
+{% endblock %}
 {% block content %}    {% endblock %}
 
 

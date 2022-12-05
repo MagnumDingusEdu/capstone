@@ -15,6 +15,7 @@ import requests
 from django.conf import settings
 
 
+# Depricated
 class UploadCSVView(StaffRequired, TemplateView):
     template_name = "admin/student_upload_form.html"
 

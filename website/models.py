@@ -1,3 +1,4 @@
+import dataclasses
 from uuid import uuid4
 
 from django.core.validators import (
@@ -197,7 +198,7 @@ class MCMTietApplication(models.Model):
 
     declaration = models.BooleanField(
         help_text="I acknowledge that i have read all the eligibility criteria of scholarship and i am eligible for "
-        "applying to TIET Merit-cum-means scholarship."
+                  "applying to TIET Merit-cum-means scholarship."
     )
 
     status = models.CharField(
@@ -272,7 +273,7 @@ class MCMAlumniApplication(models.Model):
 
     declaration = models.BooleanField(
         help_text="I acknowledge that I have read all the eligibility criteria of this scholarship and I am eligible "
-        "for applying to this scholarship."
+                  "for applying to this scholarship."
     )
 
     status = models.CharField(
@@ -345,7 +346,7 @@ class MCMOtherApplication(models.Model):
 
     declaration = models.BooleanField(
         help_text="I acknowledge that I have read all the eligibility criteria of this scholarship and I am eligible "
-        "for applying to this scholarship."
+                  "for applying to this scholarship."
     )
 
     status = models.CharField(
@@ -434,3 +435,9 @@ class ReceivedScholarship(models.Model):
 
     def __str__(self):
         return self.scholarship.name
+
+
+@dataclasses.dataclass
+class ExcelError:
+    row_id: int
+    error_msg: str

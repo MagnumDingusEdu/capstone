@@ -19,18 +19,54 @@
             <div class="d-block mb-4 mb-md-0">
 
                 <h2 class="h4">Upload new Accounts</h2>
-                <p class="mb-0">Using this form, you can add new Accounts ? </p>
+                <p class="mb-0">Using this form, you can add new Accounts. Please download the template, fill it and upload it in the provided form </p>
             </div>
 
         </div>
         <div class="d-block mb-4">
-            <form method="post">
+            <form class="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form | crispy }}
-                <button class="btn btn-primary" type="submit">Upload</button>
+
+                <div class="mb-3">
+                    <input type="file" class="form-control" aria-label="file example" required name="file">
+                    <div class="invalid-feedback">Please select the Excel file after populating the template</div>
+                </div>
+
+                <div class="mb-3">
+                    <a target="_blank" href="{% static 'ACCOUNT_UPLOAD_TEMPLATE.xlsx' %}"
+                       class="btn btn btn-outline-secondary">Download Template File</a>
+                    <button class="btn btn-primary" type="submit">Upload Data</button>
+                </div>
             </form>
         </div>
 
+        {% if error_list %}
+            <div class="row">
+                <div class="col-12"><h3>Errors while parsing: </h3></div>
+                <div class="col-12">
+                    <div class="card bg-white">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th style="width: 10%; ">Row Number</th>
+                                <th>Error Encountered</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for error in error_list %}
+                                <tr>
+                                    <td>{{ error.row_id }}</td>
+                                    <td class="text-danger">{{ error.error_msg }}</td>
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         {% include 'partials/footer.html' %}
     </main>
 {% endblock %}

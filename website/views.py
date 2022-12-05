@@ -1,14 +1,20 @@
+import math
 from io import BytesIO
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import transaction, IntegrityError
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView
+from numpy import mat
 from oauthlib.oauth2.rfc6749.errors import LoginRequired
 
 from accounts.models import UserAccount, Student, Session
@@ -19,8 +25,7 @@ from website.forms import (
     MCMOtherApplicationForm,
     MCMAlumniApplicationForm,
     GrievanceForm,
-    UploadAccountsForm,
-    UploadScholarshipsForm
+
 )
 
 from website.mixins import StudentRequired, StaffRequired
@@ -34,7 +39,7 @@ from website.models import (
     MCMAlumniApplication,
     Grievance,
     Constraint,
-    ReceivedScholarship,
+    ReceivedScholarship, ExcelError,
 )
 
 import pandas as pd
@@ -77,15 +82,16 @@ class ReportsView(StaffRequired, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportsView, self).get_context_data(**kwargs)
         context["user_count"] = Student.objects.all().count()
-        context["scholarship_amount"] = (
-            ReceivedScholarship.objects.all().aggregate(Sum("amount"))["amount__sum"]
-            or 0
+        amount = (
+                ReceivedScholarship.objects.all().aggregate(Sum("amount"))["amount__sum"]
+                or 0
         )
+        context["scholarship_amount"] = f'{amount:,}'
         context["scholarship_count"] = ReceivedScholarship.objects.all().count()
         context["scholarship_percentage"] = (
-            Student.objects.filter(receivedscholarship__isnull=False).count()
-            / Student.objects.all().count()
-            * 100
+                Student.objects.filter(receivedscholarship__isnull=False).count()
+                / Student.objects.all().count()
+                * 100
         )
         context["female_count"] = Student.objects.filter(
             receivedscholarship__isnull=False, sex="F"
@@ -98,10 +104,10 @@ class ReportsView(StaffRequired, TemplateView):
 
         for i, session in enumerate(Session.objects.all().order_by("-name")):
             amount = (
-                ReceivedScholarship.objects.filter(session=session).aggregate(
-                    Sum("amount")
-                )["amount__sum"]
-                or 0
+                    ReceivedScholarship.objects.filter(session=session).aggregate(
+                        Sum("amount")
+                    )["amount__sum"]
+                    or 0
             )
             historical_data.append(
                 {"id": i, "session": session.name, "scholarship_amount": amount}
@@ -132,12 +138,12 @@ class ReportsView(StaffRequired, TemplateView):
                 prepped_dataset.append(
                     {
                         "Name": s.student.user.first_name
-                        + " "
-                        + s.student.user.last_name,
+                                + " "
+                                + s.student.user.last_name,
                         "Roll No": s.student.roll_no,
                         "E-mail": s.student.user.email,
                         "Received Scholarship": s.scholarship.name,
-                        "Scholarship Type": s.scholarship.verbose_type(),
+                        "Scholarship Type": s.scholarship.verbose_type,
                         "Amount": s.amount,
                         "current_cgpa": s.current_cgpa,
                         "cgpa_1st_semester": s.cgpa_1st_semester,
@@ -163,7 +169,7 @@ class ReportsView(StaffRequired, TemplateView):
             # Auto-adjust columns' width
             for column in df:
                 column_width = (
-                    max(df[column].astype(str).map(len).max(), len(column)) + 10
+                        max(df[column].astype(str).map(len).max(), len(column)) + 10
                 )
                 col_idx = df.columns.get_loc(column)
                 writer.sheets[branch].set_column(col_idx, col_idx, column_width)
@@ -177,13 +183,143 @@ class ReportsView(StaffRequired, TemplateView):
         ] = f"attachment; filename=Scholarship Report {session.name}.xls"
         return response
 
-class UploadScholarshipsView(StaffRequired, FormView):
-    template_name = "pages/upload-scholarship-data.html"
-    form_class = UploadScholarshipsForm
 
-class UploadAccountsView(StaffRequired, FormView):
+class UploadScholarshipsView(StaffRequired, TemplateView):
+    template_name = "pages/upload-scholarship-data.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['sessions'] = Session.objects.all()
+        context['scholarship_categories'] = ScholarshipCategory.objects.all()
+        context['scholarships'] = Scholarship.objects.all()
+        return context
+
+    def post(self, request, **kwargs):
+        messages.error(request, "Server error 500. Please contact administrator")
+        return self.render_to_response(self.get_context_data())
+
+
+class UploadAccountsView(StaffRequired, TemplateView):
     template_name = "pages/upload-account-data.html"
-    form_class = UploadAccountsForm
+
+    def return_error(self, error):
+        messages.error(self.request, error)
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, **kwargs):
+        try:
+            FileExtensionValidator(allowed_extensions=['xls', 'xlsx'])(request.FILES.get("file"))
+        except ValidationError as e:
+            return self.return_error(str(e))
+
+        try:
+            error_list = []
+            context = self.get_context_data()
+
+            excel_file: InMemoryUploadedFile = self.request.FILES.get("file")
+
+            if not excel_file:
+                self.return_error("Excel file could not be read. Please try again")
+
+            df = pd.read_excel(excel_file, index_col=False, header=0, )
+
+            error = False
+
+            students = []
+
+            for index, row in df.iterrows():
+                row_id = int(str(index)) + 1
+                local_error = False
+                if 'Roll No' not in row or not row['Roll No'] or math.isnan(row['Roll No']):
+                    error_list.append(ExcelError(row_id, "Roll Number is missing"))
+                    local_error = True
+
+                if 'E-mail' not in row or not row['E-mail'] or not type(row['E-mail']) == str:
+                    error_list.append(ExcelError(row_id, "E-mail is missing"))
+                    local_error = True
+
+                if local_error:
+                    error = True
+                    continue
+
+                email = row['E-mail']
+                roll_no = row['Roll No']
+                name = row['Student Name']
+                father_name = row["Father's Name"]
+                mother_name = row["Mother's Name"]
+                dob = row['DOB']
+                sex = row['Sex']
+                programme = row['Programme']
+                programme_name = row["Programme Name"]
+                branch_code = row["Branch Code"]
+                branch_description = row["Branch Description"]
+                application_number = row["Application Number"]
+
+                students.append({
+                    'email': email,
+                    'roll_no': roll_no,
+                    'name': name,
+                    'father_name': father_name,
+                    'mother_name': mother_name,
+                    'dob': dob,
+                    'sex': sex,
+                    'programme': programme,
+                    'programme_name': programme_name,
+                    'branch_code': branch_code,
+                    'branch_description': branch_description,
+                    'application_number': application_number,
+                })
+
+                # df = pd.read_excel()
+
+            if error:
+                context['error_list'] = error_list
+                return self.render_to_response(context)
+            else:
+                prepped_students = []
+
+                for s in students:
+                    user, created = UserAccount.objects.get_or_create(email=s['email'], role=UserAccount.STUDENT)
+                    student = user.student
+
+                    student.roll_no = s['roll_no']
+                    student.student_name = s['name']
+                    student.father_name = s['father_name']
+                    student.mother_name = s['mother_name']
+                    student.dob = s['dob']
+                    student.sex = s['sex']
+                    student.programme = s['programme']
+                    student.program_name = s['programme_name']
+                    student.branch_code = s['branch_code']
+                    student.branch_desc = s['branch_description']
+                    student.app_no = s['application_number']
+
+                    prepped_students.append(student)
+
+                Student.objects.bulk_update(
+                    prepped_students,
+                    fields=[
+                        'roll_no',
+                        'student_name',
+                        'father_name',
+                        'mother_name',
+                        'dob',
+                        'sex',
+                        'programme',
+                        'program_name',
+                        'branch_code',
+                        'branch_desc',
+                        'app_no',
+                    ])
+                print(prepped_students[1].student_name)
+                messages.success(request,
+                                 f"{len(prepped_students)} accounts have been added to the database successfully.")
+                return self.render_to_response(context)
+        except Exception as e:
+            return self.return_error(
+                "Failed to parse due to error. Please ensure that you download the template before uploading.<br>Error encountered: " + str(
+                    e))
+
 
 class NoticeBoardView(StudentRequired, ListView):
     template_name = "pages/notices.html"
@@ -389,8 +525,8 @@ class ScholarshipCalculatorView(StudentRequired, TemplateView):
             for scholarship_constraint in constraints:
 
                 if (
-                    scholarship_constraint.constraint.id
-                    not in constraint_id_to_value.keys()
+                        scholarship_constraint.constraint.id
+                        not in constraint_id_to_value.keys()
                 ):
                     relevant = False
                     break

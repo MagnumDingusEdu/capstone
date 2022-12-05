@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import AdminPasswordChangeForm
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 
 from website.models import (
     MCMTietApplication,
@@ -17,45 +17,6 @@ class UserPasswordChangeForm(AdminPasswordChangeForm):
             self.user.save()
         return self.user
 
-class UploadAccountsForm(ModelForm):
-    # TODO: Implement
-    class Meta:
-        model = MCMAlumniApplication
-        fields = '__all__'
-
-        exclude = ('remarks', 'status')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        student_id = "bruh"
-        scholarship_id = "bruhbruh"
-        self.fields['student'].value = student_id
-        self.fields['student'].initial = student_id
-        self.fields['student'].disabled = True
-        self.fields['declaration'].required = True
-        self.fields['scholarship'].value = scholarship_id
-        self.fields['scholarship'].initial = scholarship_id
-        self.fields['scholarship'].disabled = True
-
-class UploadScholarshipsForm(ModelForm):
-    # TODO: Implement
-    class Meta:
-        model = MCMAlumniApplication
-        fields = '__all__'
-
-        exclude = ('remarks', 'status')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        student_id = "bruh"
-        scholarship_id = "bruhbruh"
-        self.fields['student'].value = student_id
-        self.fields['student'].initial = student_id
-        self.fields['student'].disabled = True
-        self.fields['declaration'].required = True
-        self.fields['scholarship'].value = scholarship_id
-        self.fields['scholarship'].initial = scholarship_id
-        self.fields['scholarship'].disabled = True
 
 class MCMAlumniApplicationForm(ModelForm):
     class Meta:

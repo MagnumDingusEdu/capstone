@@ -13,9 +13,6 @@
     <main class="content">
 
         {% include 'partials/navbar.html' %}
-        {% if messages %}
-            <div class="mt-4"> {% include 'partials/message-alerts.html' %}</div>
-        {% endif %}
         {% block mainSection %}
 
         {% endblock %}

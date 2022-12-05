@@ -70,10 +70,9 @@ class Student(models.Model):
     dob = models.DateTimeField(blank=True, null=True)
     sex = models.CharField(max_length=1024, blank=True, null=True)
 
-    current_session = models.ForeignKey(Session, on_delete=models.SET_NULL, null=True)
     programme = models.CharField(max_length=1024, blank=True, null=True)
     program_name = models.CharField(max_length=1024, blank=True, null=True)
     branch_code = models.CharField(max_length=1024, blank=True, null=True)
     branch_desc = models.CharField(max_length=1024, blank=True, null=True)
 
-    app_no = models.PositiveIntegerField(blank=True, null=True)
+    app_no = models.CharField(blank=True, null=True, max_length=1024)
