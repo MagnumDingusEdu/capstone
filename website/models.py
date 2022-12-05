@@ -496,7 +496,8 @@ class CertificateRequest(models.Model):
         super(CertificateRequest, self).save(*args, **kwargs)
 
 
-@dataclasses.dataclass
 class ExcelError:
-    row_id: int
-    error_msg: str
+
+    def __init__(self, row_id, error_msg):
+        self.row_id = row_id
+        self.error_msg = error_msg
