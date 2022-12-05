@@ -3,6 +3,7 @@ from uuid import uuid4
 
 import pdfkit
 from django.conf import settings
+from django.contrib.staticfiles import finders
 from django.core.validators import (
     MaxValueValidator,
     MinValueValidator,
@@ -447,6 +448,7 @@ class CertificateRequest(models.Model):
     approved = models.BooleanField(default=False)
     date_approved = models.DateTimeField(blank=False, null=True)
     year_of_passing = models.CharField(max_length=1024, blank=False, null=True)
+    passing_cgpa = models.CharField(max_length=1024, blank=False, null=True)
     certificate = models.FileField(blank=True, null=True)
 
     def __str__(self):
@@ -454,9 +456,24 @@ class CertificateRequest(models.Model):
 
     def save(self, *args, **kwargs):
         if self.approved:
+            css = settings.BASE_DIR / "node_modules" / "bootstrap" / "dist" / "css" / "bootstrap.css"
             rendered_certificate = render_to_string("pdfs/scholarship_certificate.html", {
-                'date': self.date_approved.date()
+                'date': self.date_approved.date(),
+                'image_path': finders.find('signature.png'),
+                'css_path': css,
+                'ref_no': self.id,
+                'name': self.student.student_name or self.student.user.get_full_name(),
+                'roll_no': self.student.roll_no,
+                'father_name': self.student.father_name,
+                'programme_name': self.student.program_name,
+                'branch': self.student.branch_desc,
+                'passing': self.year_of_passing,
+                'cgpa': self.passing_cgpa,
+                'scholarship': self.received_scholarship.scholarship.name,
+                'amount': self.received_scholarship.amount,
+                'session': self.received_scholarship.session.name
             })
+
             options = {
                 'page-size': 'Letter',
                 'margin-top': '0.75in',
@@ -469,9 +486,12 @@ class CertificateRequest(models.Model):
                 ],
                 'no-outline': None
             }
+            certificate_name = f"scholarship_certificate_{uuid4()}.pdf"
             pdfkit.from_string(rendered_certificate,
-                               settings.MEDIA_ROOT / "pdfs" / f"scholarship_certificate_{uuid4()}.pdf",
+                               settings.MEDIA_ROOT / certificate_name,
+                               css=css,
                                options=options)
+            self.certificate.name = certificate_name
 
         super(CertificateRequest, self).save(*args, **kwargs)
 
