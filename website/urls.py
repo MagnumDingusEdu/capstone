@@ -17,7 +17,7 @@ from .views import (
     ScholarshipCalculatorView,
     ReportsView,
     UploadScholarshipsView,
-    UploadAccountsView
+    UploadAccountsView, MyScholarshipsView
 )
 
 app_name = "website"
@@ -61,5 +61,6 @@ urlpatterns = [
     ),
     path("reports/", ReportsView.as_view(), name="reports"),
     path("upload-scholarship/", UploadScholarshipsView.as_view(), name='upload-scholarship-data'),
-    path("upload-account/", UploadAccountsView.as_view(), name='upload-account-data')
+    path("upload-account/", UploadAccountsView.as_view(), name='upload-account-data'),
+    path("my-scholarships/", MyScholarshipsView.as_view(), name='my-scholarships')
 ]

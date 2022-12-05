@@ -1,12 +1,15 @@
 import dataclasses
 from uuid import uuid4
 
+import pdfkit
+from django.conf import settings
 from django.core.validators import (
     MaxValueValidator,
     MinValueValidator,
     FileExtensionValidator,
 )
 from django.db import models
+from django.template.loader import render_to_string
 
 from accounts.models import UserAccount, Student, Session
 
@@ -434,7 +437,43 @@ class ReceivedScholarship(models.Model):
     amount = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.scholarship.name
+        return self.scholarship.name + f" [{self.session.name}]"
+
+
+class CertificateRequest(models.Model):
+    received_scholarship = models.OneToOneField(ReceivedScholarship, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date_requested = models.DateTimeField(auto_now=True, editable=False)
+    approved = models.BooleanField(default=False)
+    date_approved = models.DateTimeField(blank=False, null=True)
+    year_of_passing = models.CharField(max_length=1024, blank=False, null=True)
+    certificate = models.FileField(blank=True, null=True)
+
+    def __str__(self):
+        return self.received_scholarship.scholarship.name + ": " + self.received_scholarship.session.name
+
+    def save(self, *args, **kwargs):
+        if self.approved:
+            rendered_certificate = render_to_string("pdfs/scholarship_certificate.html", {
+                'date': self.date_approved.date()
+            })
+            options = {
+                'page-size': 'Letter',
+                'margin-top': '0.75in',
+                'margin-right': '0.75in',
+                'margin-bottom': '0.75in',
+                'margin-left': '0.75in',
+                'encoding': "UTF-8",
+                'custom-header': [
+                    ('Accept-Encoding', 'gzip')
+                ],
+                'no-outline': None
+            }
+            pdfkit.from_string(rendered_certificate,
+                               settings.MEDIA_ROOT / "pdfs" / f"scholarship_certificate_{uuid4()}.pdf",
+                               options=options)
+
+        super(CertificateRequest, self).save(*args, **kwargs)
 
 
 @dataclasses.dataclass

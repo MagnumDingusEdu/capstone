@@ -39,7 +39,7 @@ from website.models import (
     MCMAlumniApplication,
     Grievance,
     Constraint,
-    ReceivedScholarship, ExcelError,
+    ReceivedScholarship, ExcelError, CertificateRequest,
 )
 
 import pandas as pd
@@ -548,3 +548,33 @@ class ScholarshipCalculatorView(StudentRequired, TemplateView):
         return render(
             self.request, "pages/relevant-scholarships.html", {"scholarships": answer}
         )
+
+
+class MyScholarshipsView(StudentRequired, ListView):
+    template_name = "pages/my-scholarships.html"
+    model = ReceivedScholarship
+
+    def get_queryset(self):
+        return ReceivedScholarship.objects.filter(student__user_id=self.request.user.id)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['certificates'] = CertificateRequest.objects.filter(student__user_id=self.request.user.id)
+        return context
+
+    def post(self, request, **kwargs):
+        self.object_list = self.get_queryset()
+        r_scholarship_id = self.request.POST.get("received_scholarship_id")
+        r_scholarship = get_object_or_404(ReceivedScholarship, pk=r_scholarship_id)
+
+        try:
+            certificate = r_scholarship.certificaterequest
+            messages.error(self.request,
+                           f"You request has already been received on {certificate.date_requested.date()} and is "
+                           f"pending review.")
+            return self.render_to_response(self.get_context_data())
+
+        except CertificateRequest.DoesNotExist:
+            CertificateRequest.objects.create(received_scholarship=r_scholarship, student=self.request.user.student)
+            messages.success(self.request, "Your request for a scholarship certificate has been successfully submitted")
+        return self.render_to_response(self.get_context_data())

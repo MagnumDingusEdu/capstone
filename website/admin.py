@@ -12,7 +12,7 @@ from .models import (
     MCMOtherApplication,
     MCMAlumniApplication,
     Grievance,
-    ReceivedScholarship,
+    ReceivedScholarship, CertificateRequest,
 )
 
 
@@ -194,3 +194,11 @@ class ReceivedScholarshipAdmin(admin.ModelAdmin):
         "student__user__email",
         "scholarship__name",
     )
+
+
+@admin.register(CertificateRequest)
+class CertificateRequestAdmin(admin.ModelAdmin):
+    list_display = ('received_scholarship', 'student', 'date_requested', 'approved')
+    list_filter = ('received_scholarship__scholarship__scholarship_type', 'received_scholarship__session', 'approved',
+                   'date_requested')
+    readonly_fields = ('received_scholarship', 'student', 'date_requested')

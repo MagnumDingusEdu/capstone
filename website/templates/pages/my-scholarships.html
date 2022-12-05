@@ -1,0 +1,115 @@
+{% extends 'student-dashboard-base.html' %}
+{% load tags %}
+
+{% block sidebars %}
+    {{ block.super }}
+    {% include 'partials/sidebar.html' with page="my_scholarships" %}
+{% endblock %}
+
+{% block mainSection %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">My received scholarships</h2>
+            <p class="mb-0">Here is the list of all scholarships you've received so far</p>
+        </div>
+
+    </div>
+
+
+    <div class="card rounded bg-white pt-2">
+        <div class="d-flex justify-content-center row mx-md-3 mx-0">
+            <div class="col-12 p-0">
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap rounded mb-0">
+                        <thead class="">
+                        <tr>
+                            <th>Scholarship Name</th>
+                            <th>Category</th>
+                            <th>Session</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for r_schol in object_list %}
+                            <tr>
+                                <td>{{ r_schol.scholarship.name }}</td>
+                                <td>{{ r_schol.scholarship.category }}</td>
+                                <td>{{ r_schol.session.name }}</td>
+                                <td>{{ r_schol.amount }}</td>
+
+                                <td>
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" hidden value="{{ r_schol.id }}"
+                                               name="received_scholarship_id">
+                                        <button class="btn btn-primary">Request Certificate</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+        <div class="d-block mb-4 mb-md-0">
+
+            <h2 class="h4">My Certificates</h2>
+            <p class="mb-0">Here is the list of all scholarship certificates you've requested</p>
+        </div>
+
+    </div>
+
+
+    <div class="card rounded bg-white pt-2">
+        <div class="d-flex justify-content-center row mx-md-3 mx-0">
+            <div class="col-12 p-0">
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap rounded mb-0">
+                        <thead class="">
+                        <tr>
+                            <th>Scholarship Name</th>
+                            <th>Category</th>
+                            <th>Session</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for certificate in certificates %}
+                            <tr>
+                                <td>{{ certificate.received_scholarship.scholarship.name }}</td>
+                                <td>{{ certificate.received_scholarship.scholarship.category }}</td>
+                                <td>{{ certificate.received_scholarship.session.name }}</td>
+                                <td>{{ certificate.received_scholarship.amount }}</td>
+
+                                <td>
+                                    {% if certificate.approved %}
+                                        {% if certificate.certificate %}
+                                            <a href="{{ certificate.certificate.url }}" class="btn btn-secondary">Download
+                                                Certificate</a>
+                                        {% else %}
+                                            Certificate not generated. Certificate Id: #{{ certificate.id }}
+                                        {% endif %}
+                                    {% else %}
+                                        <button class="btn btn-outline-secondary" disabled>Pending Approval</button>
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

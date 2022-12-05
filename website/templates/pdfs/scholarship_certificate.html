@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Certificate of Scholarship</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body class="pt-5">
+<div class="container">
+    <div class="d-flex justify-content-end">
+        <div class="d-block">
+            <p class="m-0">Ref. No. <b>AS/324234</b></p>
+            <p>Dated: {{ date }}</p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        <h5><u>TO WHOM IT MAY CONCERN</u></h5>
+    </div>
+    <div class="w-100 mt-4 mb-5" style="text-align: justify;">
+        <p>This is to certify that <b>Mr. Vividh Mariya</b> S/O <b>Mr. Neeraj Mariya, Regn No. "101903572"</b> has
+            passed
+            <b>Bachelor of Engineering</b> in <b>Electronics & Communication Engineering</b> from this Institute
+            (Formerly known as Thapar University) in <b>July 2019</b> securing a Cumulative Grade Point Average
+            (CGPA)
+            of <b>7.63</b> (10.00 point scale).
+        </p>
+        <p>Further certified that he was awarded <b>Merit Scholarship-III</b> for <b>Rs. 68,000/-</b> in the year
+            2015-16 on the basis of Merit at the time of admission in his stream.
+
+
+    </div>
+
+    <div class="d-block mt-5">
+        <img src="{% static 'signature.png' %}" alt="" style="width: 120px;">
+        <br>
+        <b>Asstt. Registrar</b>
+        <br>
+        <b>(Academic)</b>
+    </div>
+</div>
+
+
+</body>
+
+</html>
