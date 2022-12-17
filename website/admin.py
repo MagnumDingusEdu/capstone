@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
+from import_export.admin import ImportExportModelAdmin
+from import_export.resources import ModelResource
 
 from .models import (
     Scholarship,
@@ -75,8 +77,32 @@ class ScholarshipCategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
+class CommonResource:
+    def dehydrate_student(self, application: MCMTietApplication):
+        return application.student.roll_no
+
+    def dehydrate_scholarship(self, application: MCMTietApplication):
+        return application.scholarship.name
+
+
+class MCMApplicationResource(CommonResource, ModelResource):
+    class Meta:
+        model = MCMTietApplication
+
+
+class MCMAlumniResource(CommonResource, ModelResource):
+    class Meta:
+        model = MCMAlumniApplication
+
+
+class MCMOtherResource(CommonResource, ModelResource):
+    class Meta:
+        model = MCMOtherApplication
+
+
 @admin.register(MCMTietApplication)
-class MCMApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+class MCMApplicationAdmin(ImportExportModelAdmin, SummernoteModelAdmin, admin.ModelAdmin):
+    resource_classes = [MCMApplicationResource]
     summernote_fields = ("remarks",)
     list_display = (
         "student",
@@ -127,7 +153,8 @@ class MCMApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(MCMAlumniApplication)
-class MCMAlumniApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+class MCMAlumniApplicationAdmin(ImportExportModelAdmin, SummernoteModelAdmin, admin.ModelAdmin):
+    resource_classes = [MCMAlumniResource]
     summernote_fields = ("remarks",)
     readonly_fields = ("student", "scholarship", "id")
     search_fields = (
@@ -138,7 +165,8 @@ class MCMAlumniApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(MCMOtherApplication)
-class MCMOtherApplicationAdmin(SummernoteModelAdmin, admin.ModelAdmin):
+class MCMOtherApplicationAdmin(ImportExportModelAdmin, SummernoteModelAdmin, admin.ModelAdmin):
+    resource_classes = [MCMOtherResource]
     summernote_fields = ("remarks",)
     readonly_fields = ("student", "scholarship", "id")
     search_fields = (
