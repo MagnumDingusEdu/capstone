@@ -14,12 +14,6 @@ const MeritCombinedTable = (props) => {
   useEffect(() => {
     let rawData = window.x;
 
-    // add default selectionType
-    for (let studentId in rawData.students) {
-      // one of UNSELECTED, MERIT1, MERIT2, DISQUALIFIED
-      rawData.students[studentId].selectionType = "UNSELECTED";
-    }
-
     // sort by marks then AGPA
     rawData.students.sort((a, b) => {
       if (a.marks === b.marks) {
@@ -28,17 +22,77 @@ const MeritCombinedTable = (props) => {
       return b.marks - a.marks;
     });
 
+    // add default meritType
+    chooseMeritTypes(rawData.students);
+
     // console.log("effectlog", rawData.students);
 
     setBranchData(rawData.branches);
     setStudentData(rawData.students);
   }, []);
 
+  const chooseMeritTypes = (students) => {
+    // assume everything is sorted already
+
+    let leftoverMerit1 = props.totalMerit1;
+    let leftoverMerit2 = props.totalMerit2;
+
+    for (let studentId in students) {
+      // one of UNSELECTED, MERIT1, MERIT2, DISQUALIFIED
+      if (students[studentId].meritType === "DISQUALIFIED") {
+        continue;
+      } else if (leftoverMerit1 > 0) {
+        leftoverMerit1 -= 1;
+        students[studentId].meritType = "MERIT1";
+      } else if (leftoverMerit2 > 0) {
+        leftoverMerit2 -= 1;
+        students[studentId].meritType = "MERIT2";
+      } else {
+        students[studentId].meritType = "UNSELECTED";
+      }
+    }
+  };
+
+  const disqualifyStudent = (studentId) => {
+
+
+    setStudentData((prevState) => {
+      prevState[studentId].meritType = "DISQUALIFIED";
+
+      // now we have to re-choose all merit types
+      chooseMeritTypes(prevState);
+
+      console.log("New State should be", prevState);
+
+      return prevState;
+
+    });
+
+
+  };
+
+
+  const chooseRowBackground = (meritType) => {
+    switch (meritType) {
+      case "MERIT1":
+        return "table-primary";
+      case "MERIT2":
+        return "table-success";
+      case "DISQUALIFIED":
+        return "table-danger";
+      default:
+        return "";
+    }
+  };
+
   let studentRows = (
     <>
       {studentData.map((student, index) => (
-        <tr>
-          <td>{index+1}</td>
+        <tr
+          className={() => chooseRowBackground(student.meritType)()}
+          key={index + "student-row"}
+        >
+          <td>{index + 1}</td>
           <td>{student.branch}</td>
           <td>{student.reg_no}</td>
           <td>{student.old_reg}</td>
@@ -51,7 +105,7 @@ const MeritCombinedTable = (props) => {
           <td>{student.marks}</td>
           <td>{student.remarks}</td>
           <td>
-            <Button variant="primary">Disqualify</Button>
+            <Button variant="primary" onClick={() => disqualifyStudent(index)} >Disqualify</Button>
           </td>
         </tr>
       ))}
@@ -82,6 +136,16 @@ const MeritCombinedTable = (props) => {
       </Table>
     </>
   );
+};
+
+MeritCombinedTable.defaultProps = {
+  totalMerit1: 2,
+  totalMerit2: 1,
+};
+
+MeritCombinedTable.propTypes = {
+  totalMerit1: PropTypes.number,
+  totalMerit2: PropTypes.number,
 };
 
 export default MeritCombinedTable;
