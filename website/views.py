@@ -1,3 +1,4 @@
+import json
 import math
 from io import BytesIO
 
@@ -197,6 +198,250 @@ class UploadScholarshipsView(StaffRequired, TemplateView):
     def post(self, request, **kwargs):
         messages.error(request, "Server error 500. Please contact administrator")
         return self.render_to_response(self.get_context_data())
+
+
+class AutomaticMerit12View(StaffRequired, TemplateView):
+    template_name = "pages/automatic-merit-1-2.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['sessions'] = Session.objects.all()
+        return context
+
+    def return_error(self, error):
+        messages.error(self.request, error)
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, **kwargs):
+        try:
+            FileExtensionValidator(allowed_extensions=['xls', 'xlsx'])(request.FILES.get("file"))
+        except ValidationError as e:
+            return self.return_error(str(e))
+
+        try:
+            error_list = []
+            context = self.get_context_data()
+
+            excel_file: InMemoryUploadedFile = self.request.FILES.get("file")
+
+            if not excel_file:
+                self.return_error("Excel file could not be read. Please try again")
+
+            parsed_excel = pd.ExcelFile(excel_file)
+
+            branch_sheet = pd.read_excel(parsed_excel, 'Branches', na_filter=False)
+
+            branches = []
+            error = False
+            for index, row in branch_sheet.iterrows():
+                row_id = str(int(str(index)) + 2)
+
+                if not row['Tution Fees'] or not row['Development Fees'] or not row['Branch']:
+                    error_list.append(ExcelError("Branches: Row " + row_id,
+                                                 "Branch Name, Tution Fees and Development Fees are required."))
+                    error = True
+                    continue
+
+                branches.append({
+                    'name': row['Branch'],
+                    'tf': row['Tution Fees'],
+                    'df': row['Development Fees']
+                })
+
+            if error:
+                context['error_list'] = error_list
+                return self.render_to_response(context)
+
+            students = []
+            branch_names = [x['name'] for x in branches]
+            student_sheet = pd.read_excel(parsed_excel, 'Students', na_filter=False)
+            for index, row in student_sheet.iterrows():
+                row_id = str(int(str(index)) + 2)
+                local_error = False
+
+                for column in ['REGNO', 'STUDENTNAME', 'Branch', 'QUOTA', 'Backlogs', 'AGPA', 'Marks']:
+                    local_error = self.ensure_not_null(column, error_list, row, row_id)
+                local_error = local_error or self.ensure_roll_no_exists(row, row_id, "Students", error_list)
+
+                if row['Branch'] not in branch_names:
+                    error_list.append(ExcelError(f"Students: Row {row_id}", f"Branch {row['Branch']} is invalid."))
+                    local_error = True
+                if local_error:
+                    continue
+
+                students.append({
+                    "sr_no": row['Sr. no'],
+                    "branch": row['Branch'],
+                    "reg_no": row['REGNO'],
+                    "old_reg": row['old Reg'],
+                    "previous_prog": row['Previous Prog'],
+                    "previous_branch": row['Previous Branch'],
+                    "studentname": row['STUDENTNAME'],
+                    "quota": row['QUOTA'],
+                    "backlogs": row['Backlogs'],
+                    "agpa": row['AGPA'],
+                    "marks ": row['Marks'],
+                    "remarks ": row['Remarks']
+                })
+            if error_list:
+                context['error_list'] = error_list
+                return self.render_to_response(context)
+            payload = {
+                "branches": {}
+            }
+
+            for branch in branches:
+                payload["branches"][branch['name']] = {
+                    "tf": branch['tf'],
+                    "df": branch['df']
+                }
+
+            payload['students'] = students
+
+            return render(request, 'pages/automatic-merit-1-2-react.html', {'code': json.dumps(
+                payload, indent=4, separators=(',', ': ')
+            )})
+
+        except Exception as e:
+            return self.return_error(
+                "Failed to parse due to error. Please ensure that you download the template before uploading.<br>Error encountered: " + str(
+                    e))
+
+    def ensure_not_null(self, column, error_list, row, row_id):
+        if row[column] == '':
+            error_list.append(ExcelError(f"Students: Row {row_id}", f"{column} is missing"))
+            return True
+        return False
+
+    def ensure_roll_no_exists(self, row, row_id, sheet, error_list):
+        if row['REGNO'] != '' and not Student.objects.filter(roll_no=row['REGNO']).exists():
+            error_list.append(
+                ExcelError(f"{sheet}: Row {row_id}", f"Roll No. {row['REGNO']} does not exist in database."))
+            return True
+        return False
+
+
+class AutomaticMerit3View(StaffRequired, TemplateView):
+    template_name = "pages/automatic-merit-3.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['sessions'] = Session.objects.all()
+        return context
+
+    def return_error(self, error):
+        messages.error(self.request, error)
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, **kwargs):
+        try:
+            FileExtensionValidator(allowed_extensions=['xls', 'xlsx'])(request.FILES.get("file"))
+        except ValidationError as e:
+            return self.return_error(str(e))
+
+        try:
+            error_list = []
+            context = self.get_context_data()
+
+            excel_file: InMemoryUploadedFile = self.request.FILES.get("file")
+
+            if not excel_file:
+                self.return_error("Excel file could not be read. Please try again")
+
+            parsed_excel = pd.ExcelFile(excel_file)
+
+            branch_sheet = pd.read_excel(parsed_excel, 'Branches', na_filter=False)
+
+            branches = []
+            error = False
+            for index, row in branch_sheet.iterrows():
+                row_id = str(int(str(index)) + 2)
+
+                if not row['Tution Fees'] or not row['Development Fees'] or not row['Branch'] or not row['Count']:
+                    error_list.append(ExcelError("Branches: Row " + row_id,
+                                                 "Branch Name, Tution Fees, Student Count and Development Fees are required."))
+                    error = True
+                    continue
+
+                branches.append({
+                    'name': row['Branch'],
+                    'tf': row['Tution Fees'],
+                    'df': row['Development Fees'],
+                    'count': row['Count']
+                })
+
+            if error:
+                context['error_list'] = error_list
+                return self.render_to_response(context)
+
+            students = {}
+
+            for branch in branches:
+                students[branch['name']] = []
+
+                sheet = pd.read_excel(parsed_excel, branch['name'], na_filter=False)
+                for index, row in sheet.iterrows():
+                    row_id = str(int(str(index)) + 2)
+
+                    for column in ['REGNO', 'STUDENTNAME', 'QUOTA', 'Backlogs', 'AGPA', 'Marks']:
+                        local_error = self.ensure_not_null(column, error_list, row, row_id, branch['name'])
+
+                    local_error = local_error or self.ensure_roll_no_exists(row, row_id, branch['name'], error_list)
+                    print(len(error_list))
+                    if local_error:
+                        continue
+
+                    students[branch['name']].append({
+                        "sr_no": row['Sr. no'],
+                        "reg_no": row['REGNO'],
+                        "old_reg": row['old Reg'],
+                        "previous_prog": row['Previous Prog'],
+                        "previous_branch": row['Previous Branch'],
+                        "studentname": row['STUDENTNAME'],
+                        "quota": row['QUOTA'],
+                        "backlogs": row['Backlogs'],
+                        "agpa": row['AGPA'],
+                        "marks ": row['Marks'],
+                        "remarks ": row['Remarks']
+                    })
+
+            if error_list:
+                context['error_list'] = error_list
+                return self.render_to_response(context)
+            payload = {
+                "branches": {}
+            }
+
+            for branch in branches:
+                payload["branches"][branch['name']] = {
+                    "tf": branch['tf'],
+                    "df": branch['df'],
+                    "count": branch['count']
+                }
+
+            payload['students'] = students
+
+            return render(request, 'pages/automatic-merit-3-react.html', {'code': json.dumps(
+                payload, indent=4, separators=(',', ': ')
+            )})
+
+        except Exception as e:
+            return self.return_error(
+                "Failed to parse due to error. Please ensure that you download the template before uploading.<br>Error encountered: " + str(
+                    e))
+
+    def ensure_not_null(self, column, error_list, row, row_id, sheet):
+        if row[column] == '':
+            error_list.append(ExcelError(f"{sheet}: Row {row_id}", f"{column} is missing"))
+            return True
+        return False
+
+    def ensure_roll_no_exists(self, row, row_id, sheet, error_list):
+        if row['REGNO'] != '' and not Student.objects.filter(roll_no=row['REGNO']).exists():
+            error_list.append(
+                ExcelError(f"{sheet}: Row {row_id}", f"Roll No. {row['REGNO']} does not exist in database."))
+            return True
+        return False
 
 
 class UploadAccountsView(StaffRequired, TemplateView):

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block sidebars %}
+
+    {% include 'partials/mobile-navbar.html' %}
+    {% include 'partials/sidebar.html' with page="auto_merit_1_2" %}
+
+{% endblock %}
+
+{% block content %}
+
+    <main class="content">
+
+        {% include 'partials/navbar.html' %}
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mb-3">
+            <div class="d-block mb-4 mb-md-0">
+
+                <h2 class="h4">Automatic Upload of Merit I and II</h2>
+                <p class="mb-0">Using this form, you can upload and automatically compute Merit I and Merit II
+                    Scholarships </p>
+            </div>
+
+        </div>
+        <div class="d-block mb-4">
+            <form class="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="category">Session</label>
+                    <select id="category" class="form-select" required>
+                        <option value="" selected disabled>Choose session</option>
+                        {% for session in sessions %}
+                            <option value="{{ session.id }}">{{ session.name }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="file">Excel File</label>
+                    <input id="file" type="file" class="form-control" aria-label="file example" required name="file">
+                    <div class="invalid-feedback">Please select the Excel file after populating the template</div>
+                </div>
+
+                <div class="mb-3">
+                    <a target="_blank" href="{% static 'MERIT_SCHOLARSHIP_1_2_UPLOAD_TEMPLATE.xlsx' %}"
+                       class="btn btn btn-outline-secondary">Download Excel Template</a>
+                    <button class="btn btn-primary" type="submit">Upload Data</button>
+                </div>
+            </form>
+        </div>
+
+        {% if error_list %}
+            <div class="row">
+                <div class="col-12"><h3>Errors while parsing: </h3></div>
+                <div class="col-12">
+                    <div class="card bg-white">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th style="width: 10%; ">Row Number</th>
+                                <th>Error Encountered</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for error in error_list %}
+                                <tr>
+                                    <td>{{ error.row_id }}</td>
+                                    <td class="text-danger">{{ error.error_msg }}</td>
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% include 'partials/footer.html' %}
+    </main>
+{% endblock %}

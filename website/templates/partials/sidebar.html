@@ -86,7 +86,8 @@
                     title="My Submitted Applications">
                     <a href="{% url 'website:my-scholarships' %}" class="nav-link">
                       <span class="sidebar-icon">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-inboxes-fill me-2" viewBox="0 0 20 20">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                          class="bi bi-inboxes-fill me-2" viewBox="0 0 20 20">
                       <path d="M4.98 1a.5.5 0 0 0-.39.188L1.54 5H6a.5.5 0 0 1 .5.5 1.5 1.5 0 0 0 3 0A.5.5 0 0 1 10 5h4.46l-3.05-3.812A.5.5 0 0 0 11.02 1H4.98zM3.81.563A1.5 1.5 0 0 1 4.98 0h6.04a1.5 1.5 0 0 1 1.17.563l3.7 4.625a.5.5 0 0 1 .106.374l-.39 3.124A1.5 1.5 0 0 1 14.117 10H1.883A1.5 1.5 0 0 1 .394 8.686l-.39-3.124a.5.5 0 0 1 .106-.374L3.81.563zM.125 11.17A.5.5 0 0 1 .5 11H6a.5.5 0 0 1 .5.5 1.5 1.5 0 0 0 3 0 .5.5 0 0 1 .5-.5h5.5a.5.5 0 0 1 .496.562l-.39 3.124A1.5 1.5 0 0 1 14.117 16H1.883a1.5 1.5 0 0 1-1.489-1.314l-.39-3.124a.5.5 0 0 1 .121-.393z"></path>
                     </svg>
                       </span>
@@ -221,6 +222,32 @@
                         </svg>
                       </span>
                         <span class="sidebar-text">Upload Accounts</span>
+                    </a>
+                </li>
+
+                <hr>
+                <li class="nav-item {% if page == 'auto_merit_1_2' %}active {% endif %} ">
+                    <a href="{% url 'website:auto-merit-1-2' %}" class="nav-link">
+                      <span class="sidebar-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                           class="bi bi-cloud-upload-fill me-2" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd"
+                                d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z"></path>
+                        </svg>
+                      </span>
+                        <span class="sidebar-text">Automatic Merit I / II</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if page == 'auto_merit_3' %}active {% endif %} ">
+                    <a href="{% url 'website:auto-merit-3' %}" class="nav-link">
+                      <span class="sidebar-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                           class="bi bi-cloud-upload-fill me-2" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd"
+                                d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z"></path>
+                        </svg>
+                      </span>
+                        <span class="sidebar-text">Automatic Merit III</span>
                     </a>
                 </li>
 
