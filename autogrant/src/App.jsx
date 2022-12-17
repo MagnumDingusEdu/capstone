@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/index.css";
 import MeritCombinedForm from "./components/MeritCombinedForm";
+import Merit3Form from "./components/Merit3Form";
 
 const App = () => {
   return (
@@ -10,6 +11,12 @@ const App = () => {
           <div className="container">
             <h1 className="mt-5">Autogrant Merit-I & Merit-II</h1>
             <MeritCombinedForm />
+
+            <hr/>
+
+            <h1 className="mt-5">Autogrant Merit-III</h1>
+            <Merit3Form />
+
           </div>
         </main>
       </div>

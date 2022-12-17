@@ -66,7 +66,7 @@ const MeritCombinedForm = (props) => {
   return (
     <>
       <Button
-        variant="primary"
+        variant="secondary"
         onClick={() => {
           setShowAlert(false);
           setTotalMerit1(0);
@@ -81,7 +81,7 @@ const MeritCombinedForm = (props) => {
       <br />
       <br />
 
-      <MeritCombinedTable totalMerit1={totalMerit1} totalMerit2={totalMerit2} />
+      <MeritCombinedTable totalMerit1={Number(totalMerit1)} totalMerit2={Number(totalMerit2)} />
     </>
   );
 };

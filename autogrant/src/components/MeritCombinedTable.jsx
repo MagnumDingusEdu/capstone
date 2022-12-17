@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 
 const MeritCombinedTable = (props) => {
   const [studentData, setStudentData] = useState([]);
-  const [branchData, setBranchData] = useState([]);
+  const [branchData, setBranchData] = useState({});
 
   // second param is empty array so it (hopefully) executes only on first render
   useEffect(() => {
@@ -20,7 +20,7 @@ const MeritCombinedTable = (props) => {
       return b.marks - a.marks;
     });
 
-    // add default meritType
+    // add default meritTypes
     chooseMeritTypes(rawData.students);
 
     setBranchData(rawData.branches);
@@ -54,6 +54,8 @@ const MeritCombinedTable = (props) => {
   };
 
   const toggleQualificationStudent = (studentId) => {
+    // this disqualifies or reconsiders a student from scholarships
+
     let tmp = [...studentData];
 
     if (tmp[studentId].meritType == "DISQUALIFIED") {
