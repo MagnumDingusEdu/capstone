@@ -5,8 +5,6 @@ import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 
 const MeritCombinedTable = (props) => {
-  const getInitialStudentState = () => {};
-
   const [studentData, setStudentData] = useState([]);
   const [branchData, setBranchData] = useState([]);
 
@@ -25,11 +23,13 @@ const MeritCombinedTable = (props) => {
     // add default meritType
     chooseMeritTypes(rawData.students);
 
-    // console.log("effectlog", rawData.students);
-
     setBranchData(rawData.branches);
     setStudentData(rawData.students);
   }, []);
+
+  useEffect(() => {
+    console.debug("New render");
+  });
 
   const chooseMeritTypes = (students) => {
     // assume everything is sorted already
@@ -39,7 +39,7 @@ const MeritCombinedTable = (props) => {
 
     for (let studentId in students) {
       // one of UNSELECTED, MERIT1, MERIT2, DISQUALIFIED
-      if (students[studentId].meritType === "DISQUALIFIED") {
+      if (students[studentId].meritType == "DISQUALIFIED") {
         continue;
       } else if (leftoverMerit1 > 0) {
         leftoverMerit1 -= 1;
@@ -53,24 +53,42 @@ const MeritCombinedTable = (props) => {
     }
   };
 
-  const disqualifyStudent = (studentId) => {
+  const toggleQualificationStudent = (studentId) => {
+    let tmp = [...studentData];
 
+    if (tmp[studentId].meritType == "DISQUALIFIED") {
+      tmp[studentId].meritType = "UNSELECTED";
+    } else {
+      tmp[studentId].meritType = "DISQUALIFIED";
+    }
 
-    setStudentData((prevState) => {
-      prevState[studentId].meritType = "DISQUALIFIED";
+    chooseMeritTypes(tmp);
+    setStudentData(tmp);
 
-      // now we have to re-choose all merit types
-      chooseMeritTypes(prevState);
+    // Dunno why this doesnt work
 
-      console.log("New State should be", prevState);
+    // setStudentData((prevState) => {
+    //   let newState = [...prevState];
+    //   console.log("Prev", newState[studentId].meritType);
+    //   if (newState[studentId].meritType == "DISQUALIFIED") {
+    //     console.log("IF triggered");
+    //     newState[studentId].meritType = "UNSELECTED";
+    //   } else {
+    //     console.log("else triggered");
+    //     newState[studentId].meritType = "DISQUALIFIED";
+    //   }
+    //   console.log("Updated", newState[studentId].meritType);
 
-      return prevState;
+    //   // newState[studentId].meritType = "DISQUALIFIED";
 
-    });
+    //   // now we have to re-choose all merit types
+    //   chooseMeritTypes(newState);
+    //   console.log("Updated 2", newState[studentId].meritType);
+    //   console.log("New State should be", newState);
 
-
+    //   return newState;
+    // });
   };
-
 
   const chooseRowBackground = (meritType) => {
     switch (meritType) {
@@ -89,7 +107,7 @@ const MeritCombinedTable = (props) => {
     <>
       {studentData.map((student, index) => (
         <tr
-          className={() => chooseRowBackground(student.meritType)()}
+          className={chooseRowBackground(student.meritType)}
           key={index + "student-row"}
         >
           <td>{index + 1}</td>
@@ -105,7 +123,14 @@ const MeritCombinedTable = (props) => {
           <td>{student.marks}</td>
           <td>{student.remarks}</td>
           <td>
-            <Button variant="primary" onClick={() => disqualifyStudent(index)} >Disqualify</Button>
+            <Button
+              variant="primary"
+              onClick={() => toggleQualificationStudent(index)}
+            >
+              {student.meritType != "DISQUALIFIED"
+                ? "Disqualify"
+                : "Reconsider"}
+            </Button>
           </td>
         </tr>
       ))}

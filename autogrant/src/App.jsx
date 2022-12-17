@@ -1,8 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/index.css";
-import { useState } from "react";
-import Example from "./components/Example";
-import MeritCombinedTable from "./components/MeritCombinedTable";
+import MeritCombinedForm from "./components/MeritCombinedForm";
 
 const App = () => {
   return (
@@ -11,8 +9,7 @@ const App = () => {
         <main className="flex-shrink-0">
           <div className="container">
             <h1 className="mt-5">Autogrant Merit-I & Merit-II</h1>
-            <p className="lead">Some BS lorem ipsum type crap here.</p>
-            <MeritCombinedTable />
+            <MeritCombinedForm />
           </div>
         </main>
       </div>
