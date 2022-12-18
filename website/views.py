@@ -280,8 +280,8 @@ class AutomaticMerit12View(StaffRequired, TemplateView):
                     "quota": row['QUOTA'],
                     "backlogs": row['Backlogs'],
                     "agpa": row['AGPA'],
-                    "marks ": row['Marks'],
-                    "remarks ": row['Remarks']
+                    "marks": row['Marks'],
+                    "remarks": row['Remarks']
                 })
             if error_list:
                 context['error_list'] = error_list
@@ -401,8 +401,8 @@ class AutomaticMerit3View(StaffRequired, TemplateView):
                         "quota": row['QUOTA'],
                         "backlogs": row['Backlogs'],
                         "agpa": row['AGPA'],
-                        "marks ": row['Marks'],
-                        "remarks ": row['Remarks']
+                        "marks": row['Marks'],
+                        "remarks": row['Remarks']
                     })
 
             if error_list:
@@ -416,7 +416,7 @@ class AutomaticMerit3View(StaffRequired, TemplateView):
                 payload["branches"][branch['name']] = {
                     "tf": branch['tf'],
                     "df": branch['df'],
-                    "count": branch['count']
+                    "strength": branch['count']
                 }
 
             payload['students'] = students

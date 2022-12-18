@@ -23,19 +23,12 @@
             </div>
 
         </div>
-        <div class="d-block mb-4" id="app">
-            <code>
-                <pre>
-                    {{ code | safe }}
-                </pre>
-            </code>
-
-            <form action="" id="submitForm">
-                {% csrf_token %}
-            </form>
+        <div id="root-m3">
         </div>
 
-
+        <form action="" id="submitForm">
+            {% csrf_token %}
+        </form>
         {% include 'partials/footer.html' %}
     </main>
 {% endblock %}
@@ -43,7 +36,9 @@
 {% block customScripts %}
 
     <script>
-        var x =
-        {{ code | safe }}
+        var m3 =
+            {{ code | safe }};
+
     </script>
+    <script src="{% static 'dist/js/react.js' %}"></script>
 {% endblock %}
