@@ -4,7 +4,7 @@ import MeritCombinedForm from "./components/MeritCombinedForm";
 import Merit3Form from "./components/Merit3Form";
 
 // import "bootstrap/dist/css/bootstrap.min.css"; // remove this if using template bootstrap
-import "./assets/index.css";
+// import "./assets/index.css";
 
 ReactDOM.createRoot(document.getElementById("root-m12")).render(
   <React.StrictMode>

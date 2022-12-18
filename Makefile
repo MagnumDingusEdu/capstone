@@ -28,6 +28,9 @@ django-createsuperuser:
 python-freeze:
 	python -m pip freeze > requirements.txt
 
-copy-react:
+copy-vite:
 	cd autogrant && npm run build
 	mv ./autogrant/dist/assets/index*.js ./website/static/dist/js/react.js
+
+copy-esbuild:
+	./autogrant/node_modules/.bin/esbuild ./autogrant/src/main.jsx --bundle --sourcemap --outfile=/home/icewreck/Development/capstone/website/static/dist/js/react.js

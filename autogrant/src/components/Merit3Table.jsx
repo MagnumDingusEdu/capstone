@@ -88,11 +88,11 @@ const Merit3Table = (props) => {
 
   return (
     <>
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-success" disabled>
+      <div className="btn-group" role="group">
+        <button type="button" className="btn btn-success" disabled>
           Merit Scholarship III
         </button>
-        <button type="button" class="btn btn-danger" disabled>
+        <button type="button" className="btn btn-danger" disabled>
           Disqualified
         </button>
       </div>

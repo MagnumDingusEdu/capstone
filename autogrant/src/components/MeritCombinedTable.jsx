@@ -166,14 +166,14 @@ const MeritCombinedTable = (props) => {
 
   return (
     <>
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-success" disabled>
+      <div className="btn-group" role="group">
+        <button type="button" className="btn btn-success" disabled>
           Merit Scholarship I
         </button>
-        <button type="button" class="btn btn-warning" disabled>
+        <button type="button" className="btn btn-warning" disabled>
           Merit Scholarship II
         </button>
-        <button type="button" class="btn btn-danger" disabled>
+        <button type="button" className="btn btn-danger" disabled>
           Disqualified
         </button>
       </div>

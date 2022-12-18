@@ -169,4 +169,4 @@ node_modules/
 docsgen
 dump
 
-website/static/dist/js/react.js
+website/static/dist/js/react.*
