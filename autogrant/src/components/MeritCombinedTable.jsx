@@ -120,9 +120,9 @@ const MeritCombinedTable = (props) => {
   const chooseRowBackground = (meritType) => {
     switch (meritType) {
       case "MERIT1":
-        return "table-primary";
-      case "MERIT2":
         return "table-success";
+      case "MERIT2":
+        return "table-warning";
       case "DISQUALIFIED":
         return "table-danger";
       default:
@@ -166,6 +166,19 @@ const MeritCombinedTable = (props) => {
 
   return (
     <>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success" disabled>
+          Merit Scholarship I
+        </button>
+        <button type="button" class="btn btn-warning" disabled>
+          Merit Scholarship II
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+          Disqualified
+        </button>
+      </div>
+      <br/>
+
       <Table bordered hover>
         <thead>
           <tr>
