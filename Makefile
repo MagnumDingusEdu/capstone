@@ -30,7 +30,7 @@ python-freeze:
 
 copy-vite:
 	cd autogrant && npm run build
-	mv ./autogrant/dist/assets/index*.js ./website/static/dist/js/react.js
+	cp ./autogrant/dist/assets/index*.js ./website/static/dist/js/react.js
 
-copy-esbuild:
+copy-esbuild: # for debug js file
 	./autogrant/node_modules/.bin/esbuild ./autogrant/src/main.jsx --bundle --sourcemap --outfile=/home/icewreck/Development/capstone/website/static/dist/js/react.js

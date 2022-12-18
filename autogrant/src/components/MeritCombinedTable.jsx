@@ -1,3 +1,5 @@
+import React from "react";
+
 import PropTypes from "prop-types";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -177,6 +179,7 @@ const MeritCombinedTable = (props) => {
           Disqualified
         </button>
       </div>
+      <br/>
       <br/>
 
       <Table bordered hover>

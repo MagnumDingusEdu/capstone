@@ -1,3 +1,5 @@
+import React from "react";
+
 import PropTypes from "prop-types";
 import Table from "react-bootstrap/Table";
 import Tab from "react-bootstrap/Tab";
@@ -97,6 +99,7 @@ const Merit3Table = (props) => {
         </button>
       </div>
       <br />
+      <br/>
 
       <Tabs id="student-branch-tabs" className="mb-3" fill>
         {Object.keys(studentData).map((branch, branchIndex) => (
@@ -105,7 +108,6 @@ const Merit3Table = (props) => {
             title={branch}
             key={branchIndex + "branch-tab"}
           >
-            <h3>Branch:</h3>
 
             <Table bordered hover>
               <thead>
