@@ -1,17 +1,17 @@
 import React from "react";
-
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+
 import Table from "react-bootstrap/Table";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-
+import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-
-import { useState, useEffect } from "react";
 
 const Merit3Table = (props) => {
   const [studentData, setStudentData] = useState({});
   const [branchData, setBranchData] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   // second param is empty array so it (hopefully) executes only on first render
   useEffect(() => {
@@ -77,6 +77,36 @@ const Merit3Table = (props) => {
     setStudentData(tmp);
   };
 
+  const findIncomplete = () => {
+    let incomplete = [];
+
+    for (let branch in studentData) {
+      let branchStrength = branchData[branch].strength;
+      let requiredNumber = Math.floor(
+        (branchStrength * props.totalPercentage) / 100
+      );
+      let leftover = requiredNumber;
+
+      // one of UNSELECTED, MERIT3, DISQUALIFIED
+      for (let studentId in studentData[branch]) {
+        if (studentData[branch][studentId].meritType == "MERIT3") {
+          leftover -= 1;
+        }
+      }
+
+      if (leftover != 0) {
+        incomplete.push(
+          `You need to choose ${requiredNumber} Merit III scholarships for branch ${branch}.`
+        );
+      }
+    }
+    return incomplete;
+  };
+
+  const submitToBackend = () => {
+    console.log("Submit Pressed");
+  };
+
   const chooseRowBackground = (meritType) => {
     switch (meritType) {
       case "MERIT3":
@@ -99,7 +129,7 @@ const Merit3Table = (props) => {
         </button>
       </div>
       <br />
-      <br/>
+      <br />
 
       <Tabs id="student-branch-tabs" className="mb-3" fill>
         {Object.keys(studentData).map((branch, branchIndex) => (
@@ -108,7 +138,6 @@ const Merit3Table = (props) => {
             title={branch}
             key={branchIndex + "branch-tab"}
           >
-
             <Table bordered hover>
               <thead>
                 <tr>
@@ -164,6 +193,37 @@ const Merit3Table = (props) => {
           </Tab>
         ))}
       </Tabs>
+
+      <br />
+
+      <Button variant="primary" onClick={() => setShowModal(true)}>
+        Submit
+      </Button>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure ?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ul>
+            {findIncomplete().map((issue, issueIndex) => (
+              <li key={"issue-" + issueIndex}>{issue}</li>
+            ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Go Back
+          </Button>
+          {findIncomplete() == "" ? (
+            <Button variant="primary" onClick={() => submitToBackend()}>
+              Save Changes
+            </Button>
+          ) : (
+            ""
+          )}
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
