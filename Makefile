@@ -27,3 +27,7 @@ django-createsuperuser:
 
 python-freeze:
 	python -m pip freeze > requirements.txt
+
+copy-react:
+	cd autogrant && npm run build
+	mv ./autogrant/dist/assets/index*.js ./website/static/dist/js/react.js

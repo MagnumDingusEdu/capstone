@@ -168,3 +168,5 @@ node_modules/
 .idea/
 docsgen
 dump
+
+website/static/dist/js/react.js

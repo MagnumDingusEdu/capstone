@@ -61,14 +61,13 @@ const Merit3Table = (props) => {
   const toggleQualificationStudent = (studentIndex, branch) => {
     // this disqualifies or reconsiders a student from scholarships
 
-    let tmp = {...studentData};
+    let tmp = { ...studentData };
 
     if (tmp[branch][studentIndex].meritType == "DISQUALIFIED") {
       tmp[branch][studentIndex].meritType = "UNSELECTED";
     } else {
       tmp[branch][studentIndex].meritType = "DISQUALIFIED";
     }
-
 
     // only re-choose merit types for particular this branch
     chooseMeritTypes(tmp[branch], branchData[branch].strength);
@@ -79,7 +78,7 @@ const Merit3Table = (props) => {
   const chooseRowBackground = (meritType) => {
     switch (meritType) {
       case "MERIT3":
-        return "table-primary";
+        return "table-success";
       case "DISQUALIFIED":
         return "table-danger";
       default:
@@ -89,6 +88,16 @@ const Merit3Table = (props) => {
 
   return (
     <>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success" disabled>
+          Merit Scholarship III
+        </button>
+        <button type="button" class="btn btn-danger" disabled>
+          Disqualified
+        </button>
+      </div>
+      <br />
+
       <Tabs id="student-branch-tabs" className="mb-3" fill>
         {Object.keys(studentData).map((branch, branchIndex) => (
           <Tab
