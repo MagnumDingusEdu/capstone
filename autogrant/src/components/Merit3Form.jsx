@@ -12,10 +12,17 @@ const Merit3Form = (props) => {
   if (!showTable) {
     return (
       <div>
-        {showAlert ? <Alert variant="danger">Please input a positive integer.</Alert> : ""}
+        {showAlert ? (
+          <Alert variant="danger">Please input a positive integer which is less-than/equal-to 100.</Alert>
+        ) : (
+          ""
+        )}
         <Form>
           <Form.Group className="mb-3" controlId="formTotalPercentage">
-            <Form.Label>Percentage of students per branch who should get Merit-III scholarships</Form.Label>
+            <Form.Label>
+              Percentage of students per branch who should get Merit-III
+              scholarships
+            </Form.Label>
             <Form.Control
               type="text"
               placeholder="Ex: 15"
@@ -31,7 +38,8 @@ const Merit3Form = (props) => {
             onClick={() => {
               if (
                 Number.isFinite(Number(totalPercentage)) &&
-                totalPercentage > 0
+                totalPercentage > 0 &&
+                totalPercentage <= 100
               ) {
                 console.log("Valid inputs");
                 setShowAlert(false);

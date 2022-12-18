@@ -35,7 +35,6 @@ const MeritCombinedForm = (props) => {
               }}
             />
           </Form.Group>
-          You want {totalMerit1} and {totalMerit2}.
           <br />
           <br />
           <Button

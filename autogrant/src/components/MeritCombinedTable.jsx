@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 import { useState, useEffect } from "react";
 
 const MeritCombinedTable = (props) => {
   const [studentData, setStudentData] = useState([]);
   const [branchData, setBranchData] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   // second param is empty array so it (hopefully) executes only on first render
   useEffect(() => {
@@ -92,6 +94,29 @@ const MeritCombinedTable = (props) => {
     // });
   };
 
+  const findIncomplete = () => {
+    let leftoverMerit1 = props.totalMerit1;
+    let leftoverMerit2 = props.totalMerit2;
+
+    for (let studentId in studentData) {
+      // one of UNSELECTED, MERIT1, MERIT2, DISQUALIFIED
+      if (studentData[studentId].meritType == "MERIT1") {
+        leftoverMerit1 -= 1;
+      } else if (studentData[studentId].meritType == "MERIT2") {
+        leftoverMerit2 -= 1;
+      }
+    }
+
+    if (leftoverMerit1 == 0 && leftoverMerit2 == 0) {
+      return "";
+    }
+    return `You need to choose ${props.totalMerit1} Merit I and ${props.totalMerit2} Merit II scholarships.`;
+  };
+
+  const submitToBackend = () => {
+    console.log("Submit Pressed");
+  };
+
   const chooseRowBackground = (meritType) => {
     switch (meritType) {
       case "MERIT1":
@@ -161,6 +186,31 @@ const MeritCombinedTable = (props) => {
         </thead>
         <tbody>{studentRows}</tbody>
       </Table>
+
+      <Button variant="primary" onClick={() => setShowModal(true)}>
+        Submit
+      </Button>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure ?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{findIncomplete()}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Go Back
+          </Button>
+          {findIncomplete() == "" ? (
+            <Button variant="primary" onClick={() => submitToBackend()}>
+              Save Changes
+            </Button>
+          ) : (
+            ""
+          )}
+        </Modal.Footer>
+      </Modal>
+
+      <br />
     </>
   );
 };
